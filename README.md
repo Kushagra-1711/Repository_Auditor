@@ -5,7 +5,7 @@ The platform allows users to submit a Github repository URL through a web interf
 
 # Features
 
-# Repository Crwaling
+# Repository Crawling
 
 - Extracts repository metadata using GitHub APIs
 - Collects README information
@@ -59,10 +59,57 @@ Generates:
  - Actionable Recommendations
  - Priority-based improvement roadmap
 
-# System Architecture
+# System Architecture (N8N Backend)
 
-                                                                Package Specialist  ---------------------
-                                                                    ↑                                   |
-Frontend → Webhook Trigger → GitHub Repository Crawler → Architecture Analyzer → Security Analyzer      ↓
-                                                                    ↓                  ↓
-                                                             Performance Analyzer → Node Combines  → Node Combines → Html Markdown → PDF Conversion → Report Sent Via User's Gmail
+
+
+
+# Tech Stack
+
+Frontend:
+ - HTML, CSS and Javascript
+
+Backend and Automation:
+ - n8n, Railway
+
+LLM:
+ - Groq
+
+Integrations:
+ - GitHub REST API, Gmail API
+
+
+# Workflow
+
+1. User enters:
+   - GitHub Repository URL
+   - Email Address
+   - Plan Selection
+2. Frontend sends request to Railway-hosted n8n webhook.
+3. GitHub Crawler gathers repository information.
+4. Multiple AI agents perform specialized analysis.
+5. Final recommendation engine generates audit findings.
+6. Report is formatted and delivered via email.
+
+# Deployment
+
+Frontend:
+ - Deployed Using Github Pages
+
+Backend:
+ - Hosted on Railway
+
+API Provider
+ - Groq
+
+# Author
+
+Kushagra Dwivedi
+
+Built as a production-ready AI automation system demonstrating:
+- Multi-agent architectures
+- Workflow automation
+- LLM orchestration
+- Cloud deployment
+- API integrations
+- SaaS development
