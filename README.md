@@ -40,4 +40,29 @@ Reviews:
 - Performance Bottlenecks
 - Scalability Concerns
 - Resource-intensive components
+- Optimization Opportunities
 
+# Agent - Package Specialist
+
+Evaluates:
+ - Dependency health
+ - Package maintenance status
+ - Outdated libraries
+ - Dependency Risks
+ - Ecosystem Recommendations
+
+# Agent - Final Recommender
+
+Generates:
+ - Overall Repository assessment
+ - Risk Summary
+ - Actionable Recommendations
+ - Priority-based improvement roadmap
+
+# System Architecture
+
+                                                                Package Specialist  ---------------------
+                                                                    ↑                                   |
+Frontend → Webhook Trigger → GitHub Repository Crawler → Architecture Analyzer → Security Analyzer      ↓
+                                                                    ↓                  ↓
+                                                             Performance Analyzer → Node Combines  → Node Combines → Html Markdown → PDF Conversion → Report Sent Via User's Gmail
