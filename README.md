@@ -14,3 +14,30 @@ The platform allows users to submit a Github repository URL through a web interf
 
 # Multi-Agent Analysis
 
+# Agent - Architecture Analyzer
+
+Identifies:
+ - Project Purpose
+ - Business Domain
+ - Tech Stack'
+ - Architectural Style
+ - Core Modules
+ - Testing Strategy
+ - Deployment Patterns
+
+# Agent - Security Analyzer
+
+Detects:
+ - Security Risks
+ - Exposed Secrets
+ - Unsafe Coding Patterns
+ - Missing Security Practices
+ - Potential Vulnerabilities
+
+# Agent - Performance Analyzer
+
+Reviews:
+- Performance Bottlenecks
+- Scalability Concerns
+- Resource-intensive components
+
