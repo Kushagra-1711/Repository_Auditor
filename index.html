@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Repo Auditor — AI-Powered Code Health for Teams</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">RepoAuditor</div>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a> <a href="#reviews">Reviews</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a href="#signup" class="button button-secondary">Start Free Trial</a>
+    </header>
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">SaaS for repository risk intelligence</p>
+          <h1>Automated GitHub audits at scale.</h1>
+          <p>
+            Get instant codebase risk reports, security insights, and
+            engineering health metrics without manual reviews. Built for dev
+            teams, engineering leaders, and audit workflows.
+          </p>
+          <div class="hero-actions">
+            <a href="#signup" class="button button-primary">Start Free Trial</a>
+            <a href="#pricing" class="button button-outline">View Plans</a>
+          </div>
+          <ul class="hero-stats">
+            <li><strong>99.9%</strong> uptime-ready workflow</li>
+            <li><strong>1M+</strong> lines analyzed per hour</li>
+            <li><strong>Team-ready</strong> collaboration tools</li>
+          </ul>
+        </div>
+        <div class="hero-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-title">Launch a repository audit</p>
+              <p class="panel-subtitle">
+                Enter your repo and choose a plan to receive a detailed report
+                by email.
+              </p>
+            </div>
+            <span class="badge">Beta</span>
+          </div>
+          <form id="auditForm" class="signup-panel">
+            <div class="field-group">
+              <label for="repoUrl">GitHub Repository URL</label>
+              <input
+                type="url"
+                id="repoUrl"
+                placeholder="https://github.com/owner/repo"
+                required
+              />
+            </div>
+            <div class="field-group">
+              <label for="plan">Choose a plan</label>
+              <select id="plan">
+                <option value="starter">Starter</option>
+                <option value="growth">Growth</option>
+                <option value="enterprise">Enterprise</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="email">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+            <button type="submit" class="button button-primary">
+              Generate Audit Report
+            </button>
+            <p id="result" class="form-message"></p>
+          </form>
+        </div>
+      </section>
+      <section id="features" class="section section-light">
+        <div class="section-heading">
+          <p class="eyebrow">Features</p>
+          <h2>
+            Everything your team needs to keep repositories secure and healthy
+          </h2>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h3>Automated repository scoring</h3>
+            <p>
+              Receive a risk score for security, dependency health, code
+              quality, and documentation coverage.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h3>Actionable recommendations</h3>
+            <p>
+              Prioritize fixes with clear remediation guidance for security
+              issues, stale dependencies, and infrastructure drift.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h3>Team-ready dashboards</h3>
+            <p>
+              Share audit results with stakeholders and track improvements
+              across repos and teams.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h3>Enterprise workflows</h3>
+            <p>
+              Integrate with GitHub, Slack, and email pipelines for automated
+              continuous reviews.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section id="pricing" class="section section-gradient">
+        <div class="section-heading white-text">
+          <p class="eyebrow">Pricing</p>
+          <h2>Plans designed for every team</h2>
+        </div>
+        <div class="pricing-grid">
+          <div class="pricing-card">
+            <p class="plan-name">Starter</p>
+            <p class="plan-price">Free</p>
+            <ul>
+              <li>1 audit per month</li>
+              <li>Email report delivery</li>
+              <li>Basic repository insights</li>
+            </ul>
+            <button
+              class="button button-outline"
+              onclick="
+                document.getElementById('plan').value = 'starter';
+                document.getElementById('repoUrl').focus();
+              "
+            >
+              Select
+            </button>
+          </div>
+          <div class="pricing-card recommended">
+            <p class="plan-name">Growth</p>
+            <p class="plan-price">₹49/mo</p>
+            <ul>
+              <li>Unlimited audits</li>
+              <li>Advanced security checks</li>
+              <li>Team dashboards</li>
+            </ul>
+            <button
+              class="button button-primary"
+              onclick="
+                document.getElementById('plan').value = 'growth';
+                document.getElementById('repoUrl').focus();
+              "
+            >
+              Select
+            </button>
+          </div>
+          <div class="pricing-card">
+            <p class="plan-name">Enterprise</p>
+            <p class="plan-price">Custom</p>
+            <ul>
+              <li>Dedicated support</li>
+              <li>Compliance reporting</li>
+              <li>Single sign-on</li>
+            </ul>
+            <button
+              class="button button-outline"
+              onclick="
+                document.getElementById('plan').value = 'enterprise';
+                document.getElementById('repoUrl').focus();
+              "
+            >
+              Select
+            </button>
+          </div>
+        </div>
+      </section>
+      <section id="reviews" class="section section-light">
+        <div class="section-heading">
+          <p class="eyebrow">Reviews</p>
+          <h2>What early users appreciate most</h2>
+        </div>
+        <div class="testimonial-grid">
+          <div class="testimonial-card">
+            <p>
+              “The audit summary is concise, and the risk insights are easy to
+              act on. It helped our team catch issues earlier in the release
+              cycle.”
+            </p>
+            <span>— Dev team lead, midsize startup</span>
+          </div>
+          <div class="testimonial-card">
+            <p>
+              “We used RepoAuditor to verify GitHub repos before every client
+              deployment. The process is fast and the reports are extremely
+              useful.”
+            </p>
+            <span>— Security engineer, product company</span>
+          </div>
+          <div class="testimonial-card">
+            <p>
+              “The audit emails are a great touchpoint for leadership and make
+              code health conversations much easier.”
+            </p>
+            <span>— Engineering manager, SaaS team</span>
+          </div>
+        </div>
+      </section>
+      <section id="contact" class="section section-dark">
+        <div class="section-heading white-text">
+          <p class="eyebrow">Ready to get started?</p>
+          <h2>Launch your first audit in seconds.</h2>
+          <p>
+            Enter a repository now and get an AI-powered report delivered to
+            your inbox.
+          </p>
+        </div>
+        <div class="contact-panel" id="signup">
+          <form id="auditFormSecondary" class="signup-panel">
+            <div class="field-group">
+              <label for="repoUrlSecondary">Repository URL</label>
+              <input
+                type="url"
+                id="repoUrlSecondary"
+                placeholder="https://github.com/owner/repo"
+                required
+              />
+            </div>
+            <div class="field-group">
+              <label for="planSecondary">Plan</label>
+              <select id="planSecondary">
+                <option value="starter">Starter</option>
+                <option value="growth">Growth</option>
+                <option value="enterprise">Enterprise</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="emailSecondary">Email Address</label>
+              <input
+                type="email"
+                id="emailSecondary"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+            <button type="submit" class="button button-primary">
+              Start Audit
+            </button>
+            <p id="resultSecondary" class="form-message"></p>
+          </form>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div>
+        © 2026 RepoAuditor. Built for audit teams and engineering leaders.
+      </div>
+      <div>support@repoauditor.example</div>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
