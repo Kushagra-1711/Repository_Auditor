@@ -1,19 +1,24 @@
 (function() {
-  // Initialize UX interactions
+  'use strict';
+
+  // ---- Auth-aware topbar ----
+  updateTopbarAuth();
+
+  // ---- Initialize UX interactions ----
   window.AppScroll.initSmoothScroll();
   window.AppPricing.initPricingSelectors();
   window.AppReviews.initReviewsSystem();
 
-  // Initialize audit submission forms
-  const auditForms = document.querySelectorAll('#auditForm, #auditFormSecondary');
-  auditForms.forEach((form) => {
-    form.addEventListener('submit', async (event) => {
+  // ---- Initialize audit submission forms ----
+  var auditForms = document.querySelectorAll('#auditForm, #auditFormSecondary');
+  auditForms.forEach(function(form) {
+    form.addEventListener('submit', async function(event) {
       event.preventDefault();
 
-      const repoUrl = form.querySelector('input[type="url"]').value.trim();
-      const email = form.querySelector('input[type="email"]').value.trim();
-      const plan = form.querySelector('select')?.value || 'starter';
-      const resultElement = form.querySelector('.form-message');
+      var repoUrl = form.querySelector('input[type="url"]').value.trim();
+      var email = form.querySelector('input[type="email"]').value.trim();
+      var plan = form.querySelector('select') ? form.querySelector('select').value : 'starter';
+      var resultElement = form.querySelector('.form-message');
 
       if (!repoUrl || !email) {
         window.AppUI.showMessage(resultElement, 'Please enter a valid repository URL and email address.', 'error');
@@ -42,4 +47,34 @@
       }
     });
   });
+
+  /**
+   * Updates the topbar to show user badge + logout (logged in)
+   * or Sign Up / Log In buttons (logged out).
+   */
+  function updateTopbarAuth() {
+    var container = document.getElementById('topbarAuth');
+    if (!container) return;
+
+    if (window.AppAuth && window.AppAuth.isLoggedIn()) {
+      var user = window.AppAuth.getCurrentUser();
+      var initial = user.name ? user.name.charAt(0) : '?';
+
+      container.innerHTML =
+        '<div class="user-badge">' +
+          '<span class="user-badge-avatar">' + initial + '</span>' +
+          '<span>' + user.name + '</span>' +
+        '</div>' +
+        '<button class="btn-logout" id="logoutBtn">Log Out</button>';
+
+      document.getElementById('logoutBtn').addEventListener('click', function() {
+        window.AppAuth.logout();
+        window.location.reload();
+      });
+    } else {
+      container.innerHTML =
+        '<a href="signup.html" class="button button-primary">Sign Up</a>' +
+        '<a href="login.html" class="button button-secondary">Log In</a>';
+    }
+  }
 })();

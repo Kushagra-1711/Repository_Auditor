@@ -656,4 +656,139 @@ button[type="submit"] {
   .pricing-card {
     border-radius: 20px;
   }
+  .auth-card {
+    margin: 1rem;
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* ========================================
+   Auth Pages (Login / Signup)
+   ======================================== */
+.auth-page {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #2563eb 100%);
+  min-height: 100vh;
+}
+
+.auth-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 140px);
+  padding: 2rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 460px;
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 28px;
+  box-shadow:
+    0 40px 100px -50px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+  padding: 2.5rem 2rem;
+}
+
+.auth-card-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-card-header h1 {
+  font-size: 2rem;
+  margin: 0 0 0.5rem;
+  line-height: 1.2;
+  color: #0f172a;
+}
+
+.auth-card-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.auth-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.auth-footer-link {
+  text-align: center;
+  margin: 1.5rem 0 0;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.auth-footer-link a {
+  color: #2563eb;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.auth-footer-link a:hover {
+  color: #1d4ed8;
+}
+
+/* Form Messages (error / success) */
+.form-message-error {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.form-message-success {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+/* ========================================
+   User Badge (Topbar — logged-in state)
+   ======================================== */
+.user-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1rem;
+  background: #eff6ff;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1d4ed8;
+}
+
+.user-badge-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.topbar-auth {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-logout {
+  background: none;
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  color: #dc2626;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-logout:hover {
+  background: rgba(220, 38, 38, 0.08);
 }

@@ -18,7 +18,11 @@
         <a href="#reviews">Reviews</a>
         <a href="#contact">Contact</a>
       </nav>
-      <a href="#signup" class="button button-secondary">Start Free Trial</a>
+      <div id="topbarAuth" class="topbar-auth">
+        <!-- Dynamically populated by script.js -->
+        <a href="signup.html" class="button button-primary">Sign Up</a>
+        <a href="login.html" class="button button-secondary">Log In</a>
+      </div>
     </header>
 
     <main>
@@ -277,6 +281,7 @@
     </footer>
 
     <!-- ===== Modular Scripts (loaded in dependency order) ===== -->
+    <script src="js/auth.js"></script>
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
     <script src="js/ui.js"></script>
