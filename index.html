@@ -3,20 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Get instant AI-powered codebase risk reports, security insights, and engineering health metrics. Built for dev teams and audit workflows." />
     <title>Repo Auditor — AI-Powered Code Health for Teams</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+
+    <!-- ===== Top Bar ===== -->
     <header class="topbar">
       <div class="brand">RepoAuditor</div>
       <nav class="nav-links">
         <a href="#features">Features</a>
-        <a href="#pricing">Pricing</a> <a href="#reviews">Reviews</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#reviews">Reviews</a>
         <a href="#contact">Contact</a>
       </nav>
       <a href="#signup" class="button button-secondary">Start Free Trial</a>
     </header>
+
     <main>
+
+      <!-- ===== Hero ===== -->
       <section class="hero">
         <div class="hero-copy">
           <p class="eyebrow">SaaS for repository risk intelligence</p>
@@ -36,6 +43,7 @@
             <li><strong>Team-ready</strong> collaboration tools</li>
           </ul>
         </div>
+
         <div class="hero-panel">
           <div class="panel-header">
             <div>
@@ -81,12 +89,12 @@
           </form>
         </div>
       </section>
+
+      <!-- ===== Features ===== -->
       <section id="features" class="section section-light">
         <div class="section-heading">
           <p class="eyebrow">Features</p>
-          <h2>
-            Everything your team needs to keep repositories secure and healthy
-          </h2>
+          <h2>Everything your team needs to keep repositories secure and healthy</h2>
         </div>
         <div class="feature-grid">
           <div class="feature-card">
@@ -119,6 +127,8 @@
           </div>
         </div>
       </section>
+
+      <!-- ===== Pricing ===== -->
       <section id="pricing" class="section section-gradient">
         <div class="section-heading white-text">
           <p class="eyebrow">Pricing</p>
@@ -133,10 +143,7 @@
               <li>Email report delivery</li>
               <li>Basic repository insights</li>
             </ul>
-            <button
-              class="button button-outline pricing-select"
-              data-plan="starter"
-            >
+            <button class="button button-outline pricing-select" data-plan="starter">
               Select
             </button>
           </div>
@@ -148,10 +155,7 @@
               <li>Advanced security checks</li>
               <li>Team dashboards</li>
             </ul>
-            <button
-              class="button button-primary pricing-select"
-              data-plan="growth"
-            >
+            <button class="button button-primary pricing-select" data-plan="growth">
               Select
             </button>
           </div>
@@ -163,34 +167,29 @@
               <li>Compliance reporting</li>
               <li>Single sign-on</li>
             </ul>
-            <button
-              class="button button-outline pricing-select"
-              data-plan="enterprise"
-            >
+            <button class="button button-outline pricing-select" data-plan="enterprise">
               Select
             </button>
           </div>
         </div>
       </section>
+
+      <!-- ===== Reviews ===== -->
       <section id="reviews" class="section section-light">
         <div class="section-heading">
           <p class="eyebrow">Reviews</p>
-          <h2>User Reviews & Ratings</h2>
+          <h2>User Reviews &amp; Ratings</h2>
         </div>
 
         <div class="reviews-container">
-          <!-- Sidebar: Summary & Review Submission Form -->
+          <!-- Sidebar: Summary & Form -->
           <div class="reviews-sidebar">
-            <!-- Overall Summary Card -->
             <div class="rating-summary-card">
               <div class="rating-summary-num" id="avgRatingNum">0.0</div>
-              <div class="rating-summary-stars" id="avgRatingStars">
-                <!-- Stars will be dynamically injected here -->
-              </div>
+              <div class="rating-summary-stars" id="avgRatingStars"></div>
               <div class="rating-summary-count" id="totalReviewsCount">Based on 0 reviews</div>
             </div>
 
-            <!-- Review Submission Form -->
             <div class="review-form-panel">
               <h3>Share Your Feedback</h3>
               <form id="reviewForm" class="signup-panel">
@@ -211,19 +210,19 @@
                 </div>
                 <div class="field-group">
                   <label for="reviewComment">Review Comment</label>
-                  <textarea id="reviewComment" rows="4" placeholder="What do you think of RepoAuditor?" required style="width:100%; padding:1rem; border:1px solid #cbd5e1; border-radius:16px; background:#f8fbff; font-family:inherit; transition:all 0.2s; resize:vertical; min-height:80px;"></textarea>
+                  <textarea id="reviewComment" rows="4" placeholder="What do you think of RepoAuditor?" required></textarea>
                 </div>
-                <button type="submit" class="button button-primary" style="margin-top: 0.5rem; width: 100%;">Submit Review</button>
+                <button type="submit" class="button button-primary">Submit Review</button>
               </form>
             </div>
           </div>
 
-          <!-- Main Feed: List of Reviews -->
-          <div class="reviews-list" id="reviewsList">
-            <!-- Reviews will be dynamically injected here -->
-          </div>
+          <!-- Reviews Feed -->
+          <div class="reviews-list" id="reviewsList"></div>
         </div>
       </section>
+
+      <!-- ===== Contact / Secondary Form ===== -->
       <section id="contact" class="section section-dark">
         <div class="section-heading white-text">
           <p class="eyebrow">Ready to get started?</p>
@@ -268,13 +267,23 @@
           </form>
         </div>
       </section>
+
     </main>
+
+    <!-- ===== Footer ===== -->
     <footer class="footer">
-      <div>
-        © 2026 RepoAuditor. Built for audit teams and engineering leaders.
-      </div>
+      <div>© 2026 RepoAuditor. Built for audit teams and engineering leaders.</div>
       <div>support@repoauditor.example</div>
     </footer>
-    <script type="module" src="script.js"></script>
+
+    <!-- ===== Modular Scripts (loaded in dependency order) ===== -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/scroll.js"></script>
+    <script src="js/pricing.js"></script>
+    <script src="js/reviews.js"></script>
+    <script src="script.js"></script>
+
   </body>
 </html>
