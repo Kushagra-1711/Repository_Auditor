@@ -175,31 +175,52 @@
       <section id="reviews" class="section section-light">
         <div class="section-heading">
           <p class="eyebrow">Reviews</p>
-          <h2>What early users appreciate most</h2>
+          <h2>User Reviews & Ratings</h2>
         </div>
-        <div class="testimonial-grid">
-          <div class="testimonial-card">
-            <p>
-              “The audit summary is concise, and the risk insights are easy to
-              act on. It helped our team catch issues earlier in the release
-              cycle.”
-            </p>
-            <span>— Dev team lead, midsize startup</span>
+
+        <div class="reviews-container">
+          <!-- Sidebar: Summary & Review Submission Form -->
+          <div class="reviews-sidebar">
+            <!-- Overall Summary Card -->
+            <div class="rating-summary-card">
+              <div class="rating-summary-num" id="avgRatingNum">0.0</div>
+              <div class="rating-summary-stars" id="avgRatingStars">
+                <!-- Stars will be dynamically injected here -->
+              </div>
+              <div class="rating-summary-count" id="totalReviewsCount">Based on 0 reviews</div>
+            </div>
+
+            <!-- Review Submission Form -->
+            <div class="review-form-panel">
+              <h3>Share Your Feedback</h3>
+              <form id="reviewForm" class="signup-panel">
+                <div class="field-group">
+                  <label for="reviewName">Your Name</label>
+                  <input type="text" id="reviewName" placeholder="e.g. Jane Doe" required />
+                </div>
+                <div class="field-group">
+                  <label>Your Rating</label>
+                  <div class="star-rating-input" id="starRatingInput">
+                    <svg data-rating="1" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg data-rating="2" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg data-rating="3" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg data-rating="4" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg data-rating="5" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                  </div>
+                  <input type="hidden" id="selectedRating" value="5" />
+                </div>
+                <div class="field-group">
+                  <label for="reviewComment">Review Comment</label>
+                  <textarea id="reviewComment" rows="4" placeholder="What do you think of RepoAuditor?" required style="width:100%; padding:1rem; border:1px solid #cbd5e1; border-radius:16px; background:#f8fbff; font-family:inherit; transition:all 0.2s; resize:vertical; min-height:80px;"></textarea>
+                </div>
+                <button type="submit" class="button button-primary" style="margin-top: 0.5rem; width: 100%;">Submit Review</button>
+              </form>
+            </div>
           </div>
-          <div class="testimonial-card">
-            <p>
-              “We used RepoAuditor to verify GitHub repos before every client
-              deployment. The process is fast and the reports are extremely
-              useful.”
-            </p>
-            <span>— Security engineer, product company</span>
-          </div>
-          <div class="testimonial-card">
-            <p>
-              “The audit emails are a great touchpoint for leadership and make
-              code health conversations much easier.”
-            </p>
-            <span>— Engineering manager, SaaS team</span>
+
+          <!-- Main Feed: List of Reviews -->
+          <div class="reviews-list" id="reviewsList">
+            <!-- Reviews will be dynamically injected here -->
           </div>
         </div>
       </section>

@@ -2,10 +2,12 @@ import { submitAuditRequest } from './js/api.js';
 import { showMessage, setSubmitButtonState } from './js/ui.js';
 import { initSmoothScroll } from './js/scroll.js';
 import { initPricingSelectors } from './js/pricing.js';
+import { initReviewsSystem } from './js/reviews.js';
 
 // Initialize UX interactions
 initSmoothScroll();
 initPricingSelectors();
+initReviewsSystem();
 
 // Initialize audit submission forms
 const auditForms = document.querySelectorAll('#auditForm, #auditFormSecondary');
