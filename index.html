@@ -134,11 +134,8 @@
               <li>Basic repository insights</li>
             </ul>
             <button
-              class="button button-outline"
-              onclick="
-                document.getElementById('plan').value = 'starter';
-                document.getElementById('repoUrl').focus();
-              "
+              class="button button-outline pricing-select"
+              data-plan="starter"
             >
               Select
             </button>
@@ -152,11 +149,8 @@
               <li>Team dashboards</li>
             </ul>
             <button
-              class="button button-primary"
-              onclick="
-                document.getElementById('plan').value = 'growth';
-                document.getElementById('repoUrl').focus();
-              "
+              class="button button-primary pricing-select"
+              data-plan="growth"
             >
               Select
             </button>
@@ -170,11 +164,8 @@
               <li>Single sign-on</li>
             </ul>
             <button
-              class="button button-outline"
-              onclick="
-                document.getElementById('plan').value = 'enterprise';
-                document.getElementById('repoUrl').focus();
-              "
+              class="button button-outline pricing-select"
+              data-plan="enterprise"
             >
               Select
             </button>
@@ -263,6 +254,6 @@
       </div>
       <div>support@repoauditor.example</div>
     </footer>
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
   </body>
 </html>
