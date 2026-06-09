@@ -10,38 +10,47 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -784,
-        -864
+        96,
+        48
       ],
-      "id": "d0d36bf1-8321-42f4-82ab-fa65d4d4f980",
+      "id": "4ccdd015-74da-48e6-afec-d2bf9d8a15d8",
       "name": "Webhook",
       "webhookId": "0bb3e865-950f-4091-a44d-9e716b564108"
     },
     {
       "parameters": {
-        "jsCode": "const repoUrl = $json.body.repo_url;\n\nconst match = repoUrl.match(/github\\.com\\/([^\\/]+)\\/([^\\/]+)/);\n\nreturn [{\n  json: {\n    owner: match[1],\n    repo: match[2]\n  }\n}];"
+        "jsCode": "const repoUrl = $json.body?.repoUrl;\n\nif (!repoUrl) {\n  throw new Error(\"repoUrl not found in webhook payload\");\n}\n\nconst match = repoUrl.match(/github\\.com\\/([^\\/]+)\\/([^\\/]+)/);\n\nif (!match) {\n  throw new Error(`Invalid GitHub URL: ${repoUrl}`);\n}\n\nreturn [{\n  owner: match[1],\n  repo: match[2]\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -592,
-        -864
+        288,
+        48
       ],
-      "id": "030ec543-573b-4628-b9a2-ef3aa4cbb56d",
+      "id": "9167add1-25df-42a1-a962-b506fe5a074a",
       "name": "Code in JavaScript"
     },
     {
       "parameters": {
         "url": "=https://api.github.com/repos/{{$json.owner}}/{{$json.repo}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "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"
+            }
+          ]
+        },
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -400,
-        -864
+        480,
+        48
       ],
-      "id": "9cabb3bd-e588-4766-9e8b-da40e3efa0dd",
+      "id": "0240374d-48a4-4868-89d3-bb62035c9b60",
       "name": "HTTP Request"
     },
     {
@@ -51,24 +60,33 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -208,
-        -864
+        672,
+        48
       ],
-      "id": "6cac9872-de45-4f1a-a3e1-d52edce81f61",
+      "id": "a9d8c04f-b99f-4320-8cbe-bc3995606003",
       "name": "Code in JavaScript1"
     },
     {
       "parameters": {
         "url": "=https://api.github.com/repos/{{$json.owner}}/{{$json.repo}}/git/trees/{{$json.branch}}?recursive=1",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "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"
+            }
+          ]
+        },
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -16,
-        -864
+        864,
+        48
       ],
-      "id": "c4089fed-4e35-4536-9a57-903173617200",
+      "id": "fc91ae81-939b-4348-bdec-b7db1cf0e560",
       "name": "HTTP Request1"
     },
     {
@@ -78,10 +96,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -752,
-        -624
+        128,
+        288
       ],
-      "id": "0a165409-bd9a-4928-a58c-af779a2ffc1c",
+      "id": "31c47c00-e4b9-4f85-8831-f31b1cd7ca79",
       "name": "Code in JavaScript2"
     },
     {
@@ -91,10 +109,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -576,
-        -624
+        320,
+        288
       ],
-      "id": "2d978834-4293-4d88-982a-7bb1e61a0b6d",
+      "id": "ec4a61d2-7a62-4179-99ab-eed6534eb0f7",
       "name": "Code in JavaScript3"
     },
     {
@@ -105,10 +123,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -384,
-        -624
+        592,
+        288
       ],
-      "id": "d9b6b18b-e4db-4a1a-804b-f229978db56c",
+      "id": "499aa2da-4bac-48c6-a18b-0b3344d062be",
       "name": "HTTP Request2"
     },
     {
@@ -118,10 +136,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -176,
-        -624
+        832,
+        288
       ],
-      "id": "3b144931-481d-46c8-b7de-3b8f61644d1a",
+      "id": "0e17728a-15be-41b9-ba69-f6edecc74458",
       "name": "Code in JavaScript4"
     },
     {
@@ -132,14 +150,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "typeVersion": 1,
       "position": [
-        256,
-        -480
+        1136,
+        432
       ],
-      "id": "c36c6cc2-4e23-4a28-80da-bcd032e8ddf2",
+      "id": "cc5aef0b-9675-47fb-9501-f639b1371206",
       "name": "Groq Chat Model",
       "credentials": {
         "groqApi": {
-          "id": "VTwMPVxLfCnvlt92",
+          "id": "LXu8TV1XkyT7iszG",
           "name": "Groq account"
         }
       }
@@ -155,10 +173,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        288,
-        -624
+        1168,
+        288
       ],
-      "id": "2e7c61a7-5162-4cc8-b3d1-91c068a3e0ca",
+      "id": "dafdbc64-51fe-494b-a1bf-7360ed8f346f",
       "name": "AI Agent"
     },
     {
@@ -168,10 +186,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        624,
-        -544
+        1504,
+        368
       ],
-      "id": "36c9e9e1-ecf5-425d-be7f-00f497e2d421",
+      "id": "1b80de66-5b14-48b1-a829-85b226295944",
       "name": "Code in JavaScript5"
     },
     {
@@ -185,10 +203,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        816,
-        -864
+        1696,
+        48
       ],
-      "id": "4f00b4ae-daca-4cd0-86a2-e75d864036b9",
+      "id": "689862e4-1e57-41af-94ae-b5a852e8305b",
       "name": "AI Agent1"
     },
     {
@@ -202,10 +220,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        864,
-        -496
+        1744,
+        416
       ],
-      "id": "ac39efba-ea79-4bbb-898c-142c95732405",
+      "id": "42508cad-8be3-4d91-b6c4-b6a7028127ec",
       "name": "AI Agent2"
     },
     {
@@ -219,10 +237,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        656,
-        -144
+        1744,
+        768
       ],
-      "id": "7620488c-a74f-4963-a353-0b48b21fd56e",
+      "id": "09e1a0f6-f28e-4f4a-9298-d0163dea1472",
       "name": "AI Agent3"
     },
     {
@@ -230,10 +248,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        1328,
-        -320
+        2416,
+        592
       ],
-      "id": "2ebd5f45-1836-485b-bfbc-c1c61899d4ad",
+      "id": "0c596a20-ebd5-4d2e-9377-47bf5b76ee2c",
       "name": "Merge1"
     },
     {
@@ -247,10 +265,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        1728,
-        -64
+        2816,
+        848
       ],
-      "id": "b8705830-7d12-4d1a-94a0-deae625d8e93",
+      "id": "16829c17-1e19-474e-a9ad-a4b3114f8cba",
       "name": "AI Agent4"
     },
     {
@@ -260,10 +278,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -784,
-        -112
+        96,
+        800
       ],
-      "id": "8ea88ebe-8340-4f9d-838a-5c01c8a532da",
+      "id": "6276e293-973f-476c-9046-6cb0d07efd2c",
       "name": "Code in JavaScript6"
     },
     {
@@ -273,10 +291,10 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        -384,
-        -112
+        560,
+        800
       ],
-      "id": "61d0ac17-fd8f-4bd2-8fc6-ffcfa1b04f08",
+      "id": "79b91702-82d8-443b-9764-5aee6796f803",
       "name": "HTML"
     },
     {
@@ -287,14 +305,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "typeVersion": 1,
       "position": [
-        800,
-        -704
+        1680,
+        208
       ],
-      "id": "24b917b1-e325-482e-8370-d7f07500f18a",
+      "id": "a225b4c3-f659-40e5-b0b7-b4417becdf46",
       "name": "Groq Chat Model1",
       "credentials": {
         "groqApi": {
-          "id": "VTwMPVxLfCnvlt92",
+          "id": "LXu8TV1XkyT7iszG",
           "name": "Groq account"
         }
       }
@@ -307,14 +325,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "typeVersion": 1,
       "position": [
-        848,
-        -352
+        1728,
+        560
       ],
-      "id": "8e1e73cb-fc05-4862-8717-596ae6a601b2",
+      "id": "d6ebd3ff-3bda-4bd3-9b4c-4737c61a4e13",
       "name": "Groq Chat Model2",
       "credentials": {
         "groqApi": {
-          "id": "VTwMPVxLfCnvlt92",
+          "id": "LXu8TV1XkyT7iszG",
           "name": "Groq account"
         }
       }
@@ -327,14 +345,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "typeVersion": 1,
       "position": [
-        592,
-        -16
+        1680,
+        896
       ],
-      "id": "6897a60e-570f-45e5-8702-49c4d0652480",
+      "id": "b8029cfb-ce6e-40af-8dd7-6b5e6ae6f5fd",
       "name": "Groq Chat Model3",
       "credentials": {
         "groqApi": {
-          "id": "VTwMPVxLfCnvlt92",
+          "id": "LXu8TV1XkyT7iszG",
           "name": "Groq account"
         }
       }
@@ -344,10 +362,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        1680,
-        -672
+        2560,
+        240
       ],
-      "id": "90f30810-7255-46e3-bb96-180a46fb6219",
+      "id": "803ae944-bde2-4afe-a090-e4c1b0628dc1",
       "name": "Merge"
     },
     {
@@ -357,10 +375,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1312,
-        -864
+        2192,
+        48
       ],
-      "id": "54785e96-ce90-45aa-ad6b-acad8ea5e2a7",
+      "id": "d35dba19-2172-453d-8dff-04f71fb5b783",
       "name": "Code in JavaScript7"
     },
     {
@@ -370,10 +388,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1264,
-        -656
+        2144,
+        256
       ],
-      "id": "b6c8228c-0b24-454d-898e-587fb42b5ed4",
+      "id": "82271e76-fea6-4836-82af-0225abf52121",
       "name": "Code in JavaScript8"
     },
     {
@@ -383,10 +401,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1136,
-        -144
+        2224,
+        768
       ],
-      "id": "8a0174d8-ef6b-49cb-83c5-edad2204e1e6",
+      "id": "e377ab0f-bb3c-4cc8-9727-2ee79e3680ae",
       "name": "Code in JavaScript9"
     },
     {
@@ -397,14 +415,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "typeVersion": 1,
       "position": [
-        1696,
-        128
+        2784,
+        1040
       ],
-      "id": "dc58a84b-3ee6-4606-8eb4-b99d2c87e227",
+      "id": "381fdf7a-6d5f-40f5-8174-64cfe87d2a46",
       "name": "Groq Chat Model4",
       "credentials": {
         "groqApi": {
-          "id": "VTwMPVxLfCnvlt92",
+          "id": "LXu8TV1XkyT7iszG",
           "name": "Groq account"
         }
       }
@@ -416,10 +434,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1552,
-        -320
+        2640,
+        592
       ],
-      "id": "893ff3bc-52f9-4e83-a133-d6432fd991b1",
+      "id": "79ea4ca4-e84e-479b-8363-778994db102c",
       "name": "Code in JavaScript10"
     },
     {
@@ -429,53 +447,11 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -576,
-        -112
+        304,
+        800
       ],
-      "id": "f5e1b794-79d2-4110-ae20-65cb9384b6ad",
+      "id": "032c0bee-11ef-4519-8f37-1462f5af0469",
       "name": "Code in JavaScript11"
-    },
-    {
-      "parameters": {
-        "html_content": "={{ $json.html }}"
-      },
-      "type": "n8n-nodes-htmlcsstopdf.htmlcsstopdf",
-      "typeVersion": 1,
-      "position": [
-        -208,
-        -112
-      ],
-      "id": "93671602-1436-4149-a540-7811dbba8322",
-      "name": "Convert HTML to PDF",
-      "credentials": {
-        "htmlcsstopdfApi": {
-          "id": "4tEglwBJ6J0Tymse",
-          "name": "HTML to PDF account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "sendTo": "dwivedikushagra01@gmail.com",
-        "subject": "Comprehensive report from the team",
-        "message": "=                 {{ $json.pdf_url }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.2,
-      "position": [
-        -16,
-        -112
-      ],
-      "id": "048d3457-245d-4a36-a943-7339c38013ba",
-      "name": "Send a message",
-      "webhookId": "60ade604-76e6-4f30-8925-99112a17c09a",
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "5s6OEmXUuWUQFMCD",
-          "name": "Gmail account"
-        }
-      }
     },
     {
       "parameters": {
@@ -486,11 +462,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -880,
-        -912
+        0,
+        0
       ],
       "typeVersion": 1,
-      "id": "497a29d5-a498-4320-82ff-39874cb70477",
+      "id": "973a7a46-d000-48d5-99ab-287b6de00278",
       "name": "Sticky Note"
     },
     {
@@ -502,11 +478,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        208,
-        -672
+        1088,
+        240
       ],
       "typeVersion": 1,
-      "id": "21ca3e99-8a88-42de-a805-7d94cc6a8fc3",
+      "id": "97ac01ac-eccc-446e-9726-886182428b72",
       "name": "Sticky Note1"
     },
     {
@@ -518,11 +494,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        752,
-        -912
+        1632,
+        0
       ],
       "typeVersion": 1,
-      "id": "efaf691e-a956-40cb-a9e7-6ca05158a334",
+      "id": "1352d381-de34-42b5-ba68-5637bb171af3",
       "name": "Sticky Note2"
     },
     {
@@ -533,11 +509,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        800,
-        -544
+        1664,
+        368
       ],
       "typeVersion": 1,
-      "id": "760338a7-0432-4184-9f29-e686887941f8",
+      "id": "053bdb62-3f22-4fc0-aee3-68ccc87c457c",
       "name": "Sticky Note3"
     },
     {
@@ -549,11 +525,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        512,
-        -192
+        1600,
+        720
       ],
       "typeVersion": 1,
-      "id": "8f673ec9-11cd-4c3f-b6b4-4634b902c57b",
+      "id": "969d923f-b7d2-404f-bb87-735641c86e1e",
       "name": "Sticky Note4"
     },
     {
@@ -565,28 +541,80 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1552,
-        -112
+        2640,
+        800
       ],
       "typeVersion": 1,
-      "id": "7ed48e5a-59c7-4757-81c0-aa9dd3f1b670",
+      "id": "98cb6849-2d67-4c5e-acc8-db46b1f8da27",
       "name": "Sticky Note5"
     },
     {
       "parameters": {
-        "content": "## Send report to the Manager",
+        "content": "## Send report to the User",
         "height": 224,
-        "width": 1216,
+        "width": 1456,
         "color": 2
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -864,
-        -176
+        16,
+        736
       ],
       "typeVersion": 1,
-      "id": "2f0d4121-c197-413a-a1ad-328fc7b0ab85",
+      "id": "27d9d2db-a155-4417-9c39-e7856960726f",
       "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "from": "onboarding@resend.dev",
+        "to": "={{ $json.to }}",
+        "subject": "Your Repository Audit Report is Ready",
+        "html": "=<h2>Repository Audit Completed</h2>\n\n<p>Your report is ready.</p>\n\n{{ $('Merge2').item.json.html }}",
+        "additionalOptions": {}
+      },
+      "type": "n8n-nodes-resend.resend",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        784
+      ],
+      "id": "6b8afa17-1cf0-408c-b939-687cd711e095",
+      "name": "Send a new email",
+      "webhookId": "d5409066-36c7-4588-b846-59499b60d400",
+      "credentials": {
+        "resendApi": {
+          "id": "QpSYZyRFlu8Ui9R3",
+          "name": "Resend account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        880,
+        784
+      ],
+      "id": "260b8fd1-b7a4-44d9-9ae2-9478d2048055",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nreturn [{\n  to: $json.body?.email,\n  fullData: $json\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1088,
+        784
+      ],
+      "id": "06aa6d05-7066-48c9-8eb1-4f47705e9ece",
+      "name": "Code in JavaScript12"
     }
   ],
   "pinData": {},
@@ -596,6 +624,11 @@
         [
           {
             "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge2",
             "type": "main",
             "index": 0
           }
@@ -803,9 +836,9 @@
       "main": [
         [
           {
-            "node": "Convert HTML to PDF",
+            "node": "Merge2",
             "type": "main",
-            "index": 0
+            "index": 1
           }
         ]
       ]
@@ -920,11 +953,22 @@
         ]
       ]
     },
-    "Convert HTML to PDF": {
+    "Merge2": {
       "main": [
         [
           {
-            "node": "Send a message",
+            "node": "Code in JavaScript12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript12": {
+      "main": [
+        [
+          {
+            "node": "Send a new email",
             "type": "main",
             "index": 0
           }
@@ -937,11 +981,11 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "54558d7e-bf31-43c1-9397-7f1dab624402",
+  "versionId": "c7e4fc7b-930d-4b3d-b490-d8d0df70c0ec",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "c1c9f46f273048c51807eced2533820a60ef403087c91f23219ab4d4d7e3e769"
+    "instanceId": "b2d315a8a527d3961b27eccfa3e987cc158020fc5906e13eb58923b4668a2f8a"
   },
-  "id": "eBmvHzEV6bgpK64H",
+  "id": "oF0EmXd7gIxO3Ygy",
   "tags": []
 }
