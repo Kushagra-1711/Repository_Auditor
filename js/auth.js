@@ -1,117 +1,144 @@
 /**
  * Auth Module — window.AppAuth
  *
- * Provides client-side authentication using localStorage.
- * Handles registration, login, logout, and session management.
+ * Provides client-side authentication backed by the FastAPI JWT system.
+ * Tokens are stored in localStorage; passwords are NEVER stored client-side.
  *
  * Storage keys:
- *   - 'repoauditor_users'   → JSON array of user objects
- *   - 'repoauditor_session' → JSON object of the logged-in user
+ *   - 'repoauditor_token'   → JWT access token string
+ *   - 'repoauditor_user'    → JSON object of the logged-in user profile
  */
 (function () {
   'use strict';
 
-  var USERS_KEY = 'repoauditor_users';
-  var SESSION_KEY = 'repoauditor_session';
+  var TOKEN_KEY = 'repoauditor_token';
+  var USER_KEY = 'repoauditor_user';
 
-  /* ---- Helpers ---- */
+  /* ---- Internal helpers ---- */
 
-  /**
-   * Simple Base64 encode for password obfuscation.
-   * NOT secure — purely for frontend simulation.
-   */
-  function encodePassword(password) {
-    try {
-      return btoa(unescape(encodeURIComponent(password)));
-    } catch (e) {
-      return btoa(password);
-    }
+  /** Returns the FastAPI base URL from global config. */
+  function apiBase() {
+    return (window.AppConfig && window.AppConfig.API_BASE_URL) || '';
   }
 
-  /** Returns all registered users from localStorage. */
-  function getUsers() {
-    try {
-      return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
-    } catch (e) {
-      return [];
-    }
-  }
+  /** Generic JSON POST to the backend. */
+  async function postJSON(path, body) {
+    var res = await fetch(apiBase() + path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
 
-  /** Saves the users array to localStorage. */
-  function saveUsers(users) {
-    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    var data;
+    try {
+      data = await res.json();
+    } catch (e) {
+      data = null;
+    }
+
+    if (!res.ok) {
+      var message = (data && data.detail) || 'Request failed (' + res.status + ')';
+      throw new Error(message);
+    }
+
+    return data;
   }
 
   /* ---- Public API ---- */
 
   /**
-   * Register a new user.
+   * Register a new user via the FastAPI backend.
+   * On success, stores the JWT and user profile.
    * @param {string} name
    * @param {string} email
    * @param {string} password
-   * @returns {{ success: boolean, message: string }}
+   * @returns {Promise<{ success: boolean, message: string }>}
    */
-  function register(name, email, password) {
-    var users = getUsers();
-    var normalizedEmail = email.toLowerCase().trim();
+  async function register(name, email, password) {
+    try {
+      var data = await postJSON('/api/auth/register', {
+        name: name.trim(),
+        email: email.toLowerCase().trim(),
+        password: password,
+      });
 
-    // Check for duplicate email
-    var exists = users.some(function (u) {
-      return u.email === normalizedEmail;
-    });
-    if (exists) {
-      return { success: false, message: 'An account with this email already exists.' };
+      setSession(data.access_token, data.user);
+      return { success: true, message: 'Account created successfully!' };
+    } catch (err) {
+      return { success: false, message: err.message };
     }
-
-    var newUser = {
-      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-      name: name.trim(),
-      email: normalizedEmail,
-      password: encodePassword(password),
-      createdAt: new Date().toISOString()
-    };
-
-    users.push(newUser);
-    saveUsers(users);
-
-    // Auto-login after registration
-    setSession(newUser);
-
-    return { success: true, message: 'Account created successfully!' };
   }
 
   /**
-   * Log in with email and password.
+   * Log in with email and password via the FastAPI backend.
+   * On success, stores the JWT and user profile.
    * @param {string} email
    * @param {string} password
-   * @returns {{ success: boolean, message: string }}
+   * @returns {Promise<{ success: boolean, message: string }>}
    */
-  function login(email, password) {
-    var users = getUsers();
-    var normalizedEmail = email.toLowerCase().trim();
-    var encodedPw = encodePassword(password);
+  async function login(email, password) {
+    try {
+      var data = await postJSON('/api/auth/login', {
+        email: email.toLowerCase().trim(),
+        password: password,
+      });
 
-    var user = users.find(function (u) {
-      return u.email === normalizedEmail && u.password === encodedPw;
-    });
-
-    if (!user) {
-      return { success: false, message: 'Invalid email or password.' };
+      setSession(data.access_token, data.user);
+      return { success: true, message: 'Logged in successfully!' };
+    } catch (err) {
+      return { success: false, message: err.message };
     }
+  }
 
-    setSession(user);
-    return { success: true, message: 'Logged in successfully!' };
+  /**
+   * Request a password reset email.
+   * @param {string} email
+   * @returns {Promise<{ success: boolean, message: string }>}
+   */
+  async function forgotPassword(email) {
+    try {
+      var data = await postJSON('/api/auth/forgot-password', {
+        email: email.toLowerCase().trim(),
+      });
+      return { success: true, message: data.message };
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
+  }
+
+  /**
+   * Reset the password using a token from the email link.
+   * @param {string} token
+   * @param {string} newPassword
+   * @returns {Promise<{ success: boolean, message: string }>}
+   */
+  async function resetPassword(token, newPassword) {
+    try {
+      var data = await postJSON('/api/auth/reset-password', {
+        token: token,
+        new_password: newPassword,
+      });
+      return { success: true, message: data.message };
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
   }
 
   /** Log out the current user. */
   function logout() {
-    localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+  }
+
+  /** Returns the stored JWT access token, or null. */
+  function getToken() {
+    return localStorage.getItem(TOKEN_KEY) || null;
   }
 
   /** Returns the current logged-in user object, or null. */
   function getCurrentUser() {
     try {
-      return JSON.parse(localStorage.getItem(SESSION_KEY)) || null;
+      return JSON.parse(localStorage.getItem(USER_KEY)) || null;
     } catch (e) {
       return null;
     }
@@ -119,17 +146,13 @@
 
   /** Returns true if a user is currently logged in. */
   function isLoggedIn() {
-    return getCurrentUser() !== null;
+    return getToken() !== null;
   }
 
-  /** Stores the session for a user (excluding password). */
-  function setSession(user) {
-    var session = {
-      id: user.id,
-      name: user.name,
-      email: user.email
-    };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  /** Stores the JWT and user profile in localStorage. */
+  function setSession(token, user) {
+    localStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
   }
 
   /* ---- Expose ---- */
@@ -137,7 +160,10 @@
     register: register,
     login: login,
     logout: logout,
+    forgotPassword: forgotPassword,
+    resetPassword: resetPassword,
     getCurrentUser: getCurrentUser,
-    isLoggedIn: isLoggedIn
+    getToken: getToken,
+    isLoggedIn: isLoggedIn,
   };
 })();

@@ -1,0 +1,20 @@
+# Environment variables (contains secrets)
+.env
+.env.local
+.env.*.local
+server/.env
+
+# Python caching & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# JSON config
+mult_agent_architecture_1.json

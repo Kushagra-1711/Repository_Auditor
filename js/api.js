@@ -1,29 +1,72 @@
 // Global API request namespace
 window.AppAPI = (function() {
+
   /**
-   * Submits a repository audit request to the webhook.
+   * Build headers object, optionally including the JWT Bearer token.
+   * @param {boolean} [auth=false] - Whether to include the Authorization header.
+   * @returns {Object} Headers object.
+   */
+  function buildHeaders(auth) {
+    var headers = { 'Content-Type': 'application/json' };
+    if (auth && window.AppAuth) {
+      var token = window.AppAuth.getToken();
+      if (token) {
+        headers['Authorization'] = 'Bearer ' + token;
+      }
+    }
+    return headers;
+  }
+
+  /**
+   * Submits a repository audit request to the n8n webhook.
+   * (Direct webhook flow — will migrate to FastAPI in v1.1)
    * @param {string} repoUrl - The URL of the GitHub repository.
    * @param {string} email - The email address to send the report to.
    * @param {string} plan - The selected pricing plan.
    * @returns {Promise<Response>} Resolves with the fetch response if successful.
    */
   async function submitAuditRequest(repoUrl, email, plan) {
-    const url = window.AppConfig.WEBHOOK_URL;
-    const response = await fetch(url, {
+    var url = window.AppConfig.WEBHOOK_URL;
+    var response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ repoUrl, email, plan, source: 'website' }),
+      body: JSON.stringify({ repoUrl: repoUrl, email: email, plan: plan, source: 'website' }),
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
+      var errorText = await response.text();
       throw new Error(errorText || 'Request failed.');
     }
 
     return response;
   }
 
+  /**
+   * Submit a contact form message.
+   * @param {{ name: string, email: string, subject: string, message: string }} data
+   * @returns {Promise<Object>}
+   */
+  async function submitContactForm(data) {
+    var url = window.AppConfig.API_BASE_URL + '/api/contact';
+    var response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    var result;
+    try { result = await response.json(); } catch (e) { result = null; }
+
+    if (!response.ok) {
+      throw new Error((result && result.detail) || 'Failed to send message.');
+    }
+
+    return result;
+  }
+
   return {
-    submitAuditRequest
+    submitAuditRequest: submitAuditRequest,
+    submitContactForm: submitContactForm,
+    buildHeaders: buildHeaders,
   };
 })();

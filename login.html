@@ -44,6 +44,9 @@
         </form>
 
         <p class="auth-footer-link">
+          <a href="forgot-password.html">Forgot your password?</a>
+        </p>
+        <p class="auth-footer-link">
           Don't have an account? <a href="signup.html">Sign up for free</a>
         </p>
       </div>
@@ -56,6 +59,7 @@
     </footer>
 
     <!-- Scripts -->
+    <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script>
       (function () {
@@ -71,7 +75,7 @@
         var msg = document.getElementById('loginMessage');
         var submitBtn = document.getElementById('loginSubmit');
 
-        form.addEventListener('submit', function (e) {
+        form.addEventListener('submit', async function (e) {
           e.preventDefault();
 
           var email = document.getElementById('loginEmail').value.trim();
@@ -95,22 +99,19 @@
           submitBtn.disabled = true;
           submitBtn.textContent = 'Logging in…';
 
-          // Simulate brief network delay
-          setTimeout(function () {
-            var result = window.AppAuth.login(email, password);
+          var result = await window.AppAuth.login(email, password);
 
-            if (result.success) {
-              msg.textContent = result.message + ' Redirecting…';
-              msg.className = 'form-message form-message-success';
-              setTimeout(function () {
-                window.location.href = 'index.html';
-              }, 600);
-            } else {
-              showError(result.message);
-              submitBtn.disabled = false;
-              submitBtn.textContent = 'Log In';
-            }
-          }, 400);
+          if (result.success) {
+            msg.textContent = result.message + ' Redirecting…';
+            msg.className = 'form-message form-message-success';
+            setTimeout(function () {
+              window.location.href = 'index.html';
+            }, 600);
+          } else {
+            showError(result.message);
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Log In';
+          }
         });
 
         function showError(text) {

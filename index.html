@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Get instant AI-powered codebase risk reports, security insights, and engineering health metrics. Built for dev teams and audit workflows." />
+    <meta property="og:title" content="RepoAuditor — AI-Powered Code Health for Teams" />
+    <meta property="og:description" content="Automated GitHub audits at scale. Get instant security insights, code quality metrics, and actionable recommendations." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://repoauditor.com" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="RepoAuditor — AI-Powered Code Health for Teams" />
+    <meta name="twitter:description" content="Automated GitHub audits at scale. Get instant security insights, code quality metrics, and actionable recommendations." />
     <title>Repo Auditor — AI-Powered Code Health for Teams</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -12,10 +19,14 @@
     <!-- ===== Top Bar ===== -->
     <header class="topbar">
       <div class="brand">RepoAuditor</div>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
       <nav class="nav-links">
         <a href="#features">Features</a>
         <a href="#pricing">Pricing</a>
         <a href="#reviews">Reviews</a>
+        <a href="#faq">FAQ</a>
         <a href="#contact">Contact</a>
       </nav>
       <div id="topbarAuth" class="topbar-auth">
@@ -38,7 +49,7 @@
             teams, engineering leaders, and audit workflows.
           </p>
           <div class="hero-actions">
-            <a href="#signup" class="button button-primary">Start Free Trial</a>
+            <a href="signup.html" class="button button-primary">Start Free Trial</a>
             <a href="#pricing" class="button button-outline">View Plans</a>
           </div>
           <ul class="hero-stats">
@@ -226,63 +237,149 @@
         </div>
       </section>
 
-      <!-- ===== Contact / Secondary Form ===== -->
+      <!-- ===== FAQ ===== -->
+      <section id="faq" class="section section-light">
+        <div class="section-heading">
+          <p class="eyebrow">FAQ</p>
+          <h2>Frequently Asked Questions</h2>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              What is RepoAuditor?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>RepoAuditor is an AI-powered SaaS platform that analyzes GitHub repositories and generates comprehensive audit reports covering code quality, security, documentation, architecture, and maintainability.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              How does the audit work?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Simply paste your GitHub repository URL, choose a plan, and enter your email. Our multi-agent AI system scans your codebase and delivers a detailed report directly to your inbox within minutes.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              Is my code safe?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Absolutely. We only read public repository data via the GitHub API. Your code is never stored, copied, or shared. Analysis happens in memory and is discarded after report generation.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              How long does an audit take?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Most audits complete within 2–5 minutes depending on repository size. You'll receive an email notification as soon as your report is ready.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              Can I audit private repositories?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>Private repository support is coming soon on the Growth and Enterprise plans. Currently, only public GitHub repositories are supported.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question" type="button">
+              What payment methods do you accept?
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <p>We accept all major credit/debit cards, UPI, and net banking via Razorpay. Enterprise plans can be paid via invoice.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Contact ("Leave us your query") ===== -->
       <section id="contact" class="section section-dark">
         <div class="section-heading white-text">
-          <p class="eyebrow">Ready to get started?</p>
-          <h2>Launch your first audit in seconds.</h2>
+          <p class="eyebrow">Contact</p>
+          <h2>Leave us your query</h2>
           <p>
-            Enter a repository now and get an AI-powered report delivered to
-            your inbox.
+            Have a question, feature request, or need help? Drop us a message and
+            we'll get back to you shortly.
           </p>
         </div>
         <div class="contact-panel" id="signup">
-          <form id="auditFormSecondary" class="signup-panel">
-            <div class="field-group">
-              <label for="repoUrlSecondary">Repository URL</label>
-              <input
-                type="url"
-                id="repoUrlSecondary"
-                placeholder="https://github.com/owner/repo"
-                required
-              />
+          <form id="contactForm" class="signup-panel">
+            <div class="contact-form-grid">
+              <div class="field-group">
+                <label for="contactName">Your Name</label>
+                <input type="text" id="contactName" placeholder="Jane Doe" required />
+              </div>
+              <div class="field-group">
+                <label for="contactEmail">Email Address</label>
+                <input type="email" id="contactEmail" placeholder="you@example.com" required />
+              </div>
             </div>
             <div class="field-group">
-              <label for="planSecondary">Plan</label>
-              <select id="planSecondary">
-                <option value="starter">Starter</option>
-                <option value="growth">Growth</option>
-                <option value="enterprise">Enterprise</option>
-              </select>
+              <label for="contactSubject">Subject</label>
+              <input type="text" id="contactSubject" placeholder="e.g. Feature request, Bug report, Pricing question" required />
             </div>
             <div class="field-group">
-              <label for="emailSecondary">Email Address</label>
-              <input
-                type="email"
-                id="emailSecondary"
-                placeholder="you@example.com"
-                required
-              />
+              <label for="contactMessage">Message</label>
+              <textarea id="contactMessage" rows="5" placeholder="Tell us how we can help…" required></textarea>
             </div>
             <button type="submit" class="button button-primary">
-              Start Audit
+              Send Message
             </button>
-            <p id="resultSecondary" class="form-message"></p>
+            <p id="contactResult" class="form-message"></p>
           </form>
         </div>
       </section>
 
     </main>
 
-    <!-- ===== Footer ===== -->
-    <footer class="footer">
-      <div>© 2026 RepoAuditor. Built for audit teams and engineering leaders.</div>
-      <div>support@repoauditor.example</div>
+    <!-- ===== Enhanced Footer ===== -->
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div class="footer-col footer-brand-col">
+          <div class="footer-brand">RepoAuditor</div>
+          <p>AI-powered repository audits for teams that care about code quality, security, and maintainability.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+            <li><a href="mailto:support@repoauditor.example">Email Support</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 RepoAuditor. All rights reserved. Built for audit teams and engineering leaders.</p>
+      </div>
     </footer>
 
     <!-- ===== Modular Scripts (loaded in dependency order) ===== -->
-    <script src="js/auth.js"></script>
     <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/api.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/scroll.js"></script>
