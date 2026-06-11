@@ -1,0 +1,804 @@
+# Repository_Auditor v2 – Ownership & Implementation Plan
+
+## Project Overview
+
+Repository_Auditor is a multi-agent SaaS platform that analyzes GitHub repositories and generates comprehensive audit reports covering:
+
+* Code Quality
+* Security Analysis
+* Documentation Quality
+* Architecture Review
+* Maintainability Assessment
+
+The system currently consists of a frontend, backend, five AI agents, and an email-based report delivery mechanism.
+
+The goal of this implementation phase is to transform the project into a production-ready SaaS platform while preserving the existing AI agent ecosystem.
+
+---
+
+# Critical Ownership Boundary
+
+## Human Owner (Kushagra)
+
+The AI Agent Layer is the core intellectual property of the application.
+
+The following components are exclusively managed by Kushagra and must not be modified without explicit approval:
+
+### AI Agent Responsibilities
+
+#### Agent Architecture
+
+* Design of the multi-agent system
+* Agent hierarchy
+* Agent communication workflows
+* Agent orchestration logic
+
+#### Prompt Engineering
+
+* System prompts
+* Agent-specific prompts
+* Prompt optimization
+* Context management
+
+#### Repository Analysis Logic
+
+* Repository ingestion workflow
+* Repository parsing methodology
+* File selection strategies
+* Repository scoring methodology
+
+#### Audit Intelligence
+
+* Security detection logic
+* Code quality evaluation
+* Documentation analysis
+* Maintainability analysis
+* Architecture assessment
+
+#### Report Generation Logic
+
+* Audit report structure
+* Scoring algorithms
+* Recommendation generation
+* Agent consensus mechanisms
+
+#### AI Cost Management
+
+* Model selection
+* Token optimization
+* Context compression
+* Inference strategies
+
+---
+
+# Antigravity Responsibilities
+
+Antigravity acts as the platform engineer responsible for everything surrounding the AI layer.
+
+The AI Agent Layer must be treated as a black-box service exposing:
+
+```text
+Repository Input
+      ↓
+Agent System
+      ↓
+Audit Report Output
+```
+
+Antigravity must build all supporting infrastructure around this workflow.
+
+---
+
+# Phase 1: Database Layer
+
+## Objective
+
+Introduce persistent storage.
+
+### Tasks
+
+Implement PostgreSQL database.
+
+Create tables:
+
+### users
+
+* id
+* email
+* password_hash
+* created_at
+
+### audits
+
+* id
+* user_id
+* repository_url
+* repository_name
+* status
+* created_at
+* completed_at
+
+### reports
+
+* id
+* audit_id
+* report_json
+* summary
+* security_score
+* maintainability_score
+* code_quality_score
+* created_at
+
+### audit_logs
+
+* id
+* audit_id
+* event_type
+* timestamp
+
+### Deliverables
+
+* Persistent storage
+* Audit history
+* User ownership tracking
+
+---
+
+# Phase 2: Authentication
+
+## Objective
+
+Introduce user accounts.
+
+### Tasks
+
+Implement:
+
+* Registration
+* Login
+* Logout
+* JWT Authentication
+
+Security requirements:
+
+* bcrypt password hashing
+* Secure JWT secrets
+* Protected routes
+
+### Deliverables
+
+Authenticated users can:
+
+* Submit audits
+* View reports
+* Access history
+
+---
+
+# Phase 3: Dashboard
+
+## Objective
+
+Create a SaaS user experience.
+
+### Dashboard Features
+
+#### Audit History
+
+Display:
+
+* Repository name
+* Audit date
+* Status
+* Overall score
+
+#### Report Viewer
+
+Display:
+
+* Summary
+* Security findings
+* Code quality findings
+* Documentation findings
+* Recommendations
+
+#### Search
+
+Allow filtering by:
+
+* Repository name
+* Date
+* Status
+
+---
+
+# Phase 4: Email Refactor
+
+## Objective
+
+Remove dependency on Google test-user restrictions.
+
+### Tasks
+
+Replace current email implementation with:
+
+Preferred:
+
+* Resend
+
+Fallback:
+
+* SendGrid
+
+### Email Usage
+
+Emails should only be used for:
+
+* Audit completion notification
+* Welcome emails
+* Password reset
+
+Reports must be accessible from the dashboard.
+
+Reports must not rely on email delivery.
+
+---
+
+# Phase 5: Security Hardening
+
+## Objective
+
+Prepare for public usage.
+
+### SQL Injection Prevention
+
+Requirements:
+
+* ORM-only queries
+* No raw SQL concatenation
+
+### Input Validation
+
+Validate:
+
+* Repository URLs
+* Email addresses
+* User inputs
+
+### Additional Security
+
+Implement:
+
+* Rate limiting
+* Request validation
+* Secure headers
+* Environment variable management
+
+### Secrets
+
+Move all credentials to:
+
+.env
+
+Never commit secrets to GitHub.
+
+---
+
+# Phase 6: Background Processing
+
+## Objective
+
+Improve scalability.
+
+### Tasks
+
+Convert audit generation to async processing.
+
+Audit states:
+
+* PENDING
+* PROCESSING
+* COMPLETED
+* FAILED
+
+### UI Requirements
+
+Display progress indicators.
+
+Example:
+
+```text
+Repository Scan        ✓
+Security Analysis      ✓
+Documentation Review   ✓
+Architecture Review    ⏳
+Final Report           Pending
+```
+
+Antigravity must not modify agent internals.
+
+Only manage job lifecycle tracking.
+
+---
+
+# Phase 7: Deployment Migration
+
+## Objective
+
+Remove Railway dependency.
+
+### Infrastructure
+
+Frontend:
+
+* Vercel
+
+Backend:
+
+* Render
+
+Database:
+
+* Neon PostgreSQL
+
+### Tasks
+
+Configure:
+
+* CI/CD
+* Environment variables
+* Production deployment
+
+---
+
+# Phase 8: Analytics
+
+## Objective
+
+Measure product usage.
+
+### Metrics
+
+Track:
+
+* Total users
+* Total audits
+* Audit success rate
+* Average audit duration
+
+### Admin Dashboard
+
+Provide visibility into:
+
+* Usage growth
+* Error rates
+* System health
+
+---
+
+# Phase 9: Portfolio Optimization
+
+## Objective
+
+Maximize recruiter impact.
+
+### Landing Page Improvements
+
+Add:
+
+* Product Overview
+* Multi-Agent Architecture Diagram
+* Key Features
+* Screenshots
+* Demo Audit Example
+
+### Demo Mode
+
+Create pre-generated reports so recruiters can instantly explore the platform without waiting for live AI execution.
+
+---
+
+# Non-Negotiable Constraints
+
+Antigravity MUST NOT:
+
+* Modify agent prompts
+* Modify agent communication logic
+* Modify scoring algorithms
+* Modify audit intelligence
+* Modify report generation methodology
+* Replace agent architecture
+
+Antigravity MAY:
+
+* Build APIs around agents
+* Store outputs
+* Display outputs
+* Track execution status
+* Improve scalability
+* Improve deployment
+* Improve user experience
+
+---
+
+# Definition of Success
+
+A user should be able to:
+
+1. Create an account.
+2. Log in.
+3. Submit a repository.
+4. Trigger the existing multi-agent audit system.
+5. Track audit progress.
+6. View reports from a dashboard.
+7. Access historical audits.
+8. Receive optional email notifications.
+9. Use the platform without Google test-user restrictions.
+
+The final application should operate as a production-ready SaaS platform while preserving the existing AI-agent intellectual property and decision-making logic.
+
+# Phase 10: Performance & Caching Layer
+
+## Objective
+
+Reduce AI costs, improve response times, and prevent unnecessary repository reprocessing.
+
+### Repository Audit Cache
+
+Before starting an audit:
+
+1. Check whether the repository has already been audited.
+2. Compare:
+
+   * Repository URL
+   * Latest commit hash
+   * Branch
+
+If unchanged:
+
+Return cached report.
+
+If changed:
+
+Trigger a fresh audit.
+
+### Cache Storage
+
+Store:
+
+* Audit results
+* Repository metadata
+* Agent outputs
+* Computed scores
+
+### Cache Expiration
+
+Recommended:
+
+* 24-hour cache for public repositories
+* Manual refresh option
+
+### Deliverables
+
+* Reduced token consumption
+* Faster report delivery
+* Improved scalability
+
+---
+
+# Phase 11: Rate Limiting & Abuse Prevention
+
+## Objective
+
+Prevent API abuse and uncontrolled AI costs.
+
+### Anonymous Users
+
+Limit:
+
+* 3 audit requests per day
+
+### Authenticated Users
+
+Limit:
+
+* 10 audit requests per day
+
+### Future Premium Tier
+
+Allow:
+
+* Higher usage quotas
+
+### Rate Limiting Requirements
+
+Implement:
+
+* IP-based rate limiting
+* User-based rate limiting
+* Endpoint-level throttling
+
+Protect:
+
+* Login endpoint
+* Registration endpoint
+* Audit submission endpoint
+
+### Deliverables
+
+* Abuse-resistant architecture
+* Controlled operational costs
+
+---
+
+# Phase 12: Queue Management
+
+## Objective
+
+Prevent traffic spikes from overwhelming the AI system.
+
+### Queue System
+
+Implement:
+
+* Background job queue
+* FIFO processing
+
+### Queue States
+
+* Queued
+* Running
+* Completed
+* Failed
+* Retrying
+
+### Retry Logic
+
+Automatically retry:
+
+* LLM timeouts
+* Network failures
+* Temporary provider failures
+
+Maximum retries:
+
+* 3
+
+### Deliverables
+
+* Stable processing pipeline
+* Improved reliability
+
+---
+
+# Phase 13: Security Operations Layer
+
+## Objective
+
+Secure the application against common web attacks.
+
+### Authentication Security
+
+Implement:
+
+* JWT expiration
+* Refresh tokens
+* Secure cookies
+* Session invalidation
+
+### Password Security
+
+Requirements:
+
+* bcrypt
+* Strong password policy
+* Account lockout after repeated failures
+
+### API Security
+
+Implement:
+
+* Request validation
+* Payload size limits
+* Secure headers
+* Strict CORS policy
+
+### Repository Validation
+
+Validate:
+
+* GitHub repository URLs
+* Repository accessibility
+* Repository ownership metadata
+
+Reject:
+
+* Invalid URLs
+* Malformed requests
+* Unsupported repositories
+
+### SQL Injection Protection
+
+Requirements:
+
+* ORM-only queries
+* Parameterized statements
+* No dynamic SQL generation
+
+### XSS Protection
+
+Implement:
+
+* Output sanitization
+* Markdown sanitization
+* Content escaping
+
+### CSRF Protection
+
+Protect:
+
+* Authentication routes
+* User settings endpoints
+
+### Deliverables
+
+* Production-grade security posture
+
+---
+
+# Phase 14: Secrets & Key Management
+
+## Objective
+
+Protect credentials and infrastructure access.
+
+### Secrets Storage
+
+Move all secrets into:
+
+Environment Variables
+
+Examples:
+
+* DATABASE_URL
+* JWT_SECRET
+* EMAIL_API_KEY
+* LLM_PROVIDER_KEY
+
+### Prohibited
+
+Never store:
+
+* API keys
+* Database credentials
+* Secrets
+* Tokens
+
+inside:
+
+* Source code
+* Git repositories
+* Frontend bundles
+
+### Deliverables
+
+* Secure secret management
+
+---
+
+# Phase 15: Monitoring & Observability
+
+## Objective
+
+Provide visibility into application health.
+
+### Logging
+
+Track:
+
+* User logins
+* Audit creation
+* Audit completion
+* Failures
+* Security events
+
+### Metrics
+
+Monitor:
+
+* API latency
+* Audit duration
+* Queue size
+* Cache hit rate
+* Error rate
+
+### Error Tracking
+
+Capture:
+
+* Exceptions
+* Failed audits
+* Agent failures
+* Email delivery failures
+
+### Admin Visibility
+
+Provide dashboards for:
+
+* Active users
+* Audit volume
+* System health
+* AI consumption
+
+### Deliverables
+
+* Production monitoring
+* Faster debugging
+
+---
+
+# Phase 16: Cost Control Layer
+
+## Objective
+
+Prevent unexpected AI spending.
+
+### Token Usage Tracking
+
+Track:
+
+* Tokens per audit
+* Tokens per user
+* Tokens per repository
+
+### Budget Controls
+
+Configure:
+
+* Daily usage limits
+* Monthly usage limits
+* User quotas
+
+### Audit Restrictions
+
+Limit:
+
+* Repository size
+* Number of files analyzed
+* Maximum execution duration
+
+### Deliverables
+
+* Predictable operating costs
+
+---
+
+# Infrastructure Ownership Matrix
+
+Kushagra Owns:
+
+* AI agents
+* Prompt engineering
+* Audit logic
+* Scoring algorithms
+* Agent orchestration
+* Repository intelligence
+* Report generation methodology
+
+Antigravity Owns:
+
+* PostgreSQL
+* Authentication
+* Dashboard
+* Caching
+* Rate limiting
+* Queue management
+* Security
+* Monitoring
+* Logging
+* Deployment
+* Email integration
+* Infrastructure scalability
+* Cost control mechanisms
+* API architecture
+* User management
