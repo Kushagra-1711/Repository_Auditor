@@ -17,4 +17,5 @@ env/
 Thumbs.db
 
 # JSON config
-mult_agent_architecture_1.json
+multi_agent_architecture*.json
+mult_agent_architecture*.json

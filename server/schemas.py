@@ -118,3 +118,22 @@ class AuditLogResponse(BaseModel):
 
     model_config = {"from_attributes": True}
 
+
+# ── Payment Schemas ────────────────────────────────────────────────────────
+
+class CreateOrderRequest(BaseModel):
+    plan: str = Field(..., pattern=r"^(growth)$", description="Plan to purchase (only 'growth' is payable).")
+
+
+class CreateOrderResponse(BaseModel):
+    order_id: str
+    amount: int
+    currency: str
+    key_id: str
+
+
+class VerifyPaymentRequest(BaseModel):
+    razorpay_order_id: str
+    razorpay_payment_id: str
+    razorpay_signature: str
+

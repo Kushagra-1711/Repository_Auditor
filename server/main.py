@@ -20,6 +20,7 @@ from routes.audits import router as audits_router
 from routes.reports import router as reports_router
 from routes.reviews import router as reviews_router
 from routes.contact import router as contact_router
+from routes.payments import router as payments_router
 
 
 # ---------------------------------------------------------------------------
@@ -57,11 +58,16 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 # ---------------------------------------------------------------------------
 # CORS — allow the frontend origin(s)
 # ---------------------------------------------------------------------------
-allowed_origins = [
-    settings.FRONTEND_URL,           # e.g. http://localhost:8000
-    "http://localhost:5500",          # VS Code Live Server
+# Build CORS origins: always include the configured FRONTEND_URL,
+# plus common local dev servers.
+_dev_origins = [
+    "http://localhost:5500",
     "http://127.0.0.1:5500",
     "http://localhost:3000",
+    "http://localhost:8000",
+]
+allowed_origins = [settings.FRONTEND_URL] + [
+    o for o in _dev_origins if o != settings.FRONTEND_URL
 ]
 
 app.add_middleware(
@@ -81,6 +87,7 @@ app.include_router(audits_router)
 app.include_router(reports_router)
 app.include_router(reviews_router)
 app.include_router(contact_router)
+app.include_router(payments_router)
 
 
 # ---------------------------------------------------------------------------

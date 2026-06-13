@@ -93,3 +93,22 @@ class AuditLog(Base):
     )
     event_type = Column(String(100), nullable=False)
     timestamp = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+
+class Payment(Base):
+    __tablename__ = "payments"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    razorpay_order_id = Column(String(255), unique=True, nullable=False, index=True)
+    razorpay_payment_id = Column(String(255), nullable=True)
+    amount = Column(Integer, nullable=False)  # in paise (e.g. 4900 = ₹49)
+    currency = Column(String(10), nullable=False, default="INR")
+    status = Column(String(20), nullable=False, default="CREATED")  # CREATED / PAID / FAILED
+    plan = Column(String(20), nullable=False)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))

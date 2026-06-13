@@ -29,6 +29,14 @@ class Settings:
 
     def validate(self) -> None:
         """Abort startup if critical secrets are missing or insecure."""
+        if not self.DATABASE_URL:
+            print(
+                "\n❌  FATAL: DATABASE_URL is not set.\n"
+                "   Set your Supabase connection string in the .env file.\n",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+
         if self.JWT_SECRET == _INSECURE_JWT_DEFAULT:
             print(
                 "\n❌  FATAL: JWT_SECRET is set to the insecure default.\n"
@@ -37,6 +45,20 @@ class Settings:
                 file=sys.stderr,
             )
             sys.exit(1)
+
+        if not self.WEBHOOK_SECRET:
+            print(
+                "⚠️  WARNING: WEBHOOK_SECRET is not set. "
+                "The /api/audits/{id}/complete endpoint is unprotected.\n",
+                file=sys.stderr,
+            )
+
+        if not self.RAZORPAY_KEY_ID or not self.RAZORPAY_KEY_SECRET:
+            print(
+                "⚠️  WARNING: Razorpay credentials are not set. "
+                "Payment endpoints will return 503.\n",
+                file=sys.stderr,
+            )
 
 
 settings = Settings()

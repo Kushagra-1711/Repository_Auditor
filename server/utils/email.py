@@ -1,6 +1,8 @@
 """
 Email service — send transactional emails via the Resend SDK.
 """
+import html
+
 import resend
 
 from config import settings
@@ -38,19 +40,25 @@ def send_contact_email(
     """Forward a contact-form submission to the team inbox."""
     resend.api_key = settings.RESEND_API_KEY
 
+    # Sanitize user input to prevent XSS in email clients
+    safe_name = html.escape(from_name)
+    safe_email = html.escape(from_email)
+    safe_subject = html.escape(subject)
+    safe_message = html.escape(message)
+
     resend.Emails.send(
         {
             "from": settings.EMAIL_FROM,
             "to": [settings.EMAIL_FROM],  # Deliver to the team inbox
             "reply_to": from_email,
-            "subject": f"[RepoAuditor Contact] {subject}",
+            "subject": f"[RepoAuditor Contact] {safe_subject}",
             "html": (
                 f"<h2>New Contact Form Submission</h2>"
-                f"<p><strong>Name:</strong> {from_name}</p>"
-                f"<p><strong>Email:</strong> {from_email}</p>"
-                f"<p><strong>Subject:</strong> {subject}</p>"
+                f"<p><strong>Name:</strong> {safe_name}</p>"
+                f"<p><strong>Email:</strong> {safe_email}</p>"
+                f"<p><strong>Subject:</strong> {safe_subject}</p>"
                 f"<hr>"
-                f"<p>{message}</p>"
+                f"<p>{safe_message}</p>"
                 f'<br><p style="color:#64748b;font-size:13px;">— Sent from repoauditor.com contact form</p>'
             ),
         }
