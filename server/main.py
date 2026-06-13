@@ -65,6 +65,7 @@ _dev_origins = [
     "http://127.0.0.1:5500",
     "http://localhost:3000",
     "http://localhost:8000",
+    "https://repository-auditor.onrender.com",
 ]
 allowed_origins = [settings.FRONTEND_URL] + [
     o for o in _dev_origins if o != settings.FRONTEND_URL

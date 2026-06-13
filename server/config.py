@@ -18,7 +18,7 @@ class Settings:
     RESET_TOKEN_EXPIRY_MINUTES: int = 60
     RESEND_API_KEY: str = os.getenv("RESEND_API_KEY", "")
     EMAIL_FROM: str = os.getenv("EMAIL_FROM", "onboarding@resend.dev")
-    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:8000")
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "https://repository-auditor.onrender.com")
 
     # Shared secret that n8n must include in callbacks to /api/audits/{id}/complete
     WEBHOOK_SECRET: str = os.getenv("WEBHOOK_SECRET", "")
