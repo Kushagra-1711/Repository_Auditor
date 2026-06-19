@@ -1,45 +1,66 @@
 // Global reviews and rating feed namespace
 window.AppReviews = (function() {
-  // Key for LocalStorage reviews persistence
-  const LOCAL_STORAGE_KEY = 'repo_auditor_reviews';
-
-  // Default mock reviews to seed the page on first load (empty by default)
-  const DEFAULT_REVIEWS = [];
 
   /**
-   * Gets reviews from local storage or loads defaults if empty.
-   * @returns {Array<Object>} List of review objects.
+   * Fetches all reviews from the backend API.
+   * @returns {Promise<Array<Object>>} List of review objects.
    */
-  function getReviews() {
-    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-    let reviews = [];
-    if (!stored) {
-      reviews = DEFAULT_REVIEWS;
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(reviews));
-    } else {
-      try {
-        reviews = JSON.parse(stored);
-      } catch (e) {
-        reviews = DEFAULT_REVIEWS;
-      }
-    }
+  async function fetchReviews() {
+    try {
+      var url = window.AppConfig.API_BASE_URL + '/api/reviews';
+      var response = await fetch(url);
+      if (!response.ok) throw new Error('Failed to fetch reviews');
+      var data = await response.json();
 
-    // Purge any legacy default mock reviews
-    const originalLength = reviews.length;
-    reviews = reviews.filter((r) => r && r.id && !r.id.startsWith('default-'));
-    if (reviews.length !== originalLength) {
-      saveReviews(reviews);
+      // Map backend field names to frontend field names
+      return data.map(function(r) {
+        return {
+          id: r.id,
+          name: r.user_name,
+          rating: r.rating,
+          comment: r.comment,
+          date: r.created_at
+        };
+      });
+    } catch (e) {
+      console.error('Error fetching reviews:', e);
+      return [];
     }
-
-    return reviews;
   }
 
   /**
-   * Saves reviews to local storage.
-   * @param {Array<Object>} reviews - List of review objects to persist.
+   * Submits a new review to the backend API.
+   * @param {string} name - Reviewer name.
+   * @param {number} rating - Rating 1–5.
+   * @param {string} comment - Review text.
+   * @returns {Promise<Object|null>} The created review, or null on failure.
    */
-  function saveReviews(reviews) {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(reviews));
+  async function submitReview(name, rating, comment) {
+    var url = window.AppConfig.API_BASE_URL + '/api/reviews';
+    var response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_name: name,
+        rating: rating,
+        comment: comment
+      })
+    });
+
+    if (!response.ok) {
+      var errorData;
+      try { errorData = await response.json(); } catch (e) { errorData = null; }
+      throw new Error((errorData && errorData.detail) || 'Failed to submit review.');
+    }
+
+    var created = await response.json();
+    return {
+      id: created.id,
+      name: created.user_name,
+      rating: created.rating,
+      comment: created.comment,
+      date: created.created_at
+    };
   }
 
   /**
@@ -48,11 +69,11 @@ window.AppReviews = (function() {
    * @returns {string} HTML string containing 5 SVG stars.
    */
   function renderStars(rating) {
-    let starsHtml = '';
-    const roundedRating = Math.round(rating);
-    for (let i = 1; i <= 5; i++) {
-      const isFilled = i <= roundedRating;
-      starsHtml += `<svg class="${isFilled ? 'filled' : ''}" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
+    var starsHtml = '';
+    var roundedRating = Math.round(rating);
+    for (var i = 1; i <= 5; i++) {
+      var isFilled = i <= roundedRating;
+      starsHtml += '<svg class="' + (isFilled ? 'filled' : '') + '" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
     }
     return starsHtml;
   }
@@ -64,7 +85,7 @@ window.AppReviews = (function() {
    */
   function getInitials(name) {
     if (!name) return 'RA';
-    const parts = name.trim().split(/\s+/);
+    var parts = name.trim().split(/\s+/);
     if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
@@ -74,13 +95,13 @@ window.AppReviews = (function() {
    * @param {Array<Object>} reviews - List of current reviews.
    */
   function updateSummaryCard(reviews) {
-    const avgRatingNum = document.getElementById('avgRatingNum');
-    const avgRatingStars = document.getElementById('avgRatingStars');
-    const totalReviewsCount = document.getElementById('totalReviewsCount');
+    var avgRatingNum = document.getElementById('avgRatingNum');
+    var avgRatingStars = document.getElementById('avgRatingStars');
+    var totalReviewsCount = document.getElementById('totalReviewsCount');
 
     if (!avgRatingNum || !avgRatingStars || !totalReviewsCount) return;
 
-    const totalReviews = reviews.length;
+    var totalReviews = reviews.length;
     if (totalReviews === 0) {
       avgRatingNum.textContent = '0.0';
       avgRatingStars.innerHTML = renderStars(0);
@@ -88,25 +109,23 @@ window.AppReviews = (function() {
       return;
     }
 
-    const sumRatings = reviews.reduce((sum, review) => sum + review.rating, 0);
-    const average = sumRatings / totalReviews;
+    var sumRatings = reviews.reduce(function(sum, review) { return sum + review.rating; }, 0);
+    var average = sumRatings / totalReviews;
 
-    // Format to 1 decimal place
     avgRatingNum.textContent = average.toFixed(1);
     avgRatingStars.innerHTML = renderStars(average);
-    totalReviewsCount.textContent = `Based on ${totalReviews} review${totalReviews === 1 ? '' : 's'}`;
+    totalReviewsCount.textContent = 'Based on ' + totalReviews + ' review' + (totalReviews === 1 ? '' : 's');
   }
 
   /**
-   * Formats a ISO date string into a readable format.
+   * Formats an ISO date string into a readable format.
    * @param {string} isoString - ISO date string.
    * @returns {string} Formatted date (e.g. "June 4, 2026").
    */
   function formatDate(isoString) {
-    const dateObj = new Date(isoString);
+    var dateObj = new Date(isoString);
     if (isNaN(dateObj.getTime())) return 'Recently';
 
-    // Format e.g., "June 4, 2026"
     return dateObj.toLocaleDateString('en-US', {
       month: 'long',
       day: 'numeric',
@@ -119,42 +138,43 @@ window.AppReviews = (function() {
    * @param {Array<Object>} reviews - List of reviews to display.
    */
   function renderReviewsList(reviews) {
-    const listContainer = document.getElementById('reviewsList');
+    var listContainer = document.getElementById('reviewsList');
     if (!listContainer) return;
 
     if (reviews.length === 0) {
-      listContainer.innerHTML = `
-        <div class="no-reviews-placeholder">
-          <p>No reviews yet</p>
-          <p>Be the first to share your feedback using the form!</p>
-        </div>
-      `;
+      listContainer.innerHTML =
+        '<div class="no-reviews-placeholder">' +
+          '<p>No reviews yet</p>' +
+          '<p>Be the first to share your feedback using the form!</p>' +
+        '</div>';
       return;
     }
 
     // Sort reviews newest first
-    const sortedReviews = [...reviews].sort((a, b) => new Date(b.date) - new Date(a.date));
+    var sortedReviews = reviews.slice().sort(function(a, b) {
+      return new Date(b.date) - new Date(a.date);
+    });
 
-    listContainer.innerHTML = sortedReviews.map((review) => {
-      const initials = getInitials(review.name);
-      const dateStr = formatDate(review.date);
-      const starsHtml = renderStars(review.rating);
+    listContainer.innerHTML = sortedReviews.map(function(review) {
+      var initials = getInitials(review.name);
+      var dateStr = formatDate(review.date);
+      var starsHtml = renderStars(review.rating);
 
-      return `
-        <div class="review-item">
-          <div class="review-header">
-            <div class="review-avatar">${initials}</div>
-            <div class="review-user-info">
-              <span class="review-username">${escapeHtml(review.name)}</span>
-              <div class="review-meta">
-                <div class="review-stars">${starsHtml}</div>
-                <span class="review-date">${dateStr}</span>
-              </div>
-            </div>
-          </div>
-          <p class="review-comment">${escapeHtml(review.comment)}</p>
-        </div>
-      `;
+      return (
+        '<div class="review-item">' +
+          '<div class="review-header">' +
+            '<div class="review-avatar">' + initials + '</div>' +
+            '<div class="review-user-info">' +
+              '<span class="review-username">' + escapeHtml(review.name) + '</span>' +
+              '<div class="review-meta">' +
+                '<div class="review-stars">' + starsHtml + '</div>' +
+                '<span class="review-date">' + dateStr + '</span>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+          '<p class="review-comment">' + escapeHtml(review.comment) + '</p>' +
+        '</div>'
+      );
     }).join('');
   }
 
@@ -177,23 +197,23 @@ window.AppReviews = (function() {
    * Sets up the star rating input click and hover behaviors.
    */
   function initStarRatingInput() {
-    const starContainer = document.getElementById('starRatingInput');
-    const ratingInput = document.getElementById('selectedRating');
+    var starContainer = document.getElementById('starRatingInput');
+    var ratingInput = document.getElementById('selectedRating');
 
     if (!starContainer || !ratingInput) return;
 
-    const stars = starContainer.querySelectorAll('svg');
-    
+    var stars = starContainer.querySelectorAll('svg');
+
     // Set default visual state
-    const defaultRating = parseInt(ratingInput.value) || 5;
+    var defaultRating = parseInt(ratingInput.value) || 5;
     updateStarsVisualState(stars, defaultRating);
 
-    stars.forEach((star) => {
+    stars.forEach(function(star) {
       // Hover Enter: highlight current star and all previous stars
-      star.addEventListener('mouseenter', () => {
-        const hoverVal = parseInt(star.getAttribute('data-rating'));
-        stars.forEach((s) => {
-          const sVal = parseInt(s.getAttribute('data-rating'));
+      star.addEventListener('mouseenter', function() {
+        var hoverVal = parseInt(star.getAttribute('data-rating'));
+        stars.forEach(function(s) {
+          var sVal = parseInt(s.getAttribute('data-rating'));
           if (sVal <= hoverVal) {
             s.classList.add('hovered');
           } else {
@@ -203,16 +223,16 @@ window.AppReviews = (function() {
       });
 
       // Click: set rating value
-      star.addEventListener('click', () => {
-        const clickVal = parseInt(star.getAttribute('data-rating'));
+      star.addEventListener('click', function() {
+        var clickVal = parseInt(star.getAttribute('data-rating'));
         ratingInput.value = clickVal;
         updateStarsVisualState(stars, clickVal);
       });
     });
 
     // Hover Leave: remove hovered class, restoring active classes
-    starContainer.addEventListener('mouseleave', () => {
-      stars.forEach((s) => s.classList.remove('hovered'));
+    starContainer.addEventListener('mouseleave', function() {
+      stars.forEach(function(s) { s.classList.remove('hovered'); });
     });
   }
 
@@ -222,8 +242,8 @@ window.AppReviews = (function() {
    * @param {number} rating - Selected rating value.
    */
   function updateStarsVisualState(stars, rating) {
-    stars.forEach((s) => {
-      const sVal = parseInt(s.getAttribute('data-rating'));
+    stars.forEach(function(s) {
+      var sVal = parseInt(s.getAttribute('data-rating'));
       if (sVal <= rating) {
         s.classList.add('active');
       } else {
@@ -233,69 +253,89 @@ window.AppReviews = (function() {
   }
 
   /**
-   * Initializes the reviews system logic, loading reviews, registering event listeners,
-   * and handling review form submission.
+   * Initializes the reviews system — fetches reviews from the backend API,
+   * renders them, and registers form submission to POST to the API.
    */
   function initReviewsSystem() {
-    const reviews = getReviews();
+    var listContainer = document.getElementById('reviewsList');
 
-    // Render initial reviews lists and stats
-    updateSummaryCard(reviews);
-    renderReviewsList(reviews);
+    // Show a loading indicator while fetching
+    if (listContainer) {
+      listContainer.innerHTML =
+        '<div class="no-reviews-placeholder">' +
+          '<p>Loading reviews…</p>' +
+        '</div>';
+    }
 
     // Initialize interactive star rating inputs
     initStarRatingInput();
 
-    // Handle Form Submission
-    const reviewForm = document.getElementById('reviewForm');
+    // Fetch reviews from the backend and render
+    fetchReviews().then(function(reviews) {
+      updateSummaryCard(reviews);
+      renderReviewsList(reviews);
+    });
+
+    // Handle Form Submission — POST to backend API
+    var reviewForm = document.getElementById('reviewForm');
     if (reviewForm) {
-      reviewForm.addEventListener('submit', (event) => {
+      reviewForm.addEventListener('submit', function(event) {
         event.preventDefault();
 
-        const nameInput = document.getElementById('reviewName');
-        const commentInput = document.getElementById('reviewComment');
-        const ratingInput = document.getElementById('selectedRating');
+        var nameInput = document.getElementById('reviewName');
+        var commentInput = document.getElementById('reviewComment');
+        var ratingInput = document.getElementById('selectedRating');
+        var formMessage = reviewForm.querySelector('.form-message');
 
         if (!nameInput || !commentInput || !ratingInput) return;
 
-        const name = nameInput.value.trim();
-        const comment = commentInput.value.trim();
-        const rating = parseInt(ratingInput.value) || 5;
+        var name = nameInput.value.trim();
+        var comment = commentInput.value.trim();
+        var rating = parseInt(ratingInput.value) || 5;
 
         if (!name || !comment) return;
 
-        // Create new review object
-        const newReview = {
-          id: 'user-' + Date.now(),
-          name: name,
-          rating: rating,
-          comment: comment,
-          date: new Date().toISOString()
-        };
+        // Disable submit button while saving
+        var submitBtn = reviewForm.querySelector('button[type="submit"]');
+        if (submitBtn) submitBtn.disabled = true;
 
-        // Load existing reviews, add new one, save and re-render
-        const currentReviews = getReviews();
-        currentReviews.push(newReview);
-        saveReviews(currentReviews);
+        submitReview(name, rating, comment)
+          .then(function() {
+            // Reset form controls
+            reviewForm.reset();
+            ratingInput.value = 5;
+            var stars = document.getElementById('starRatingInput');
+            if (stars) updateStarsVisualState(stars.querySelectorAll('svg'), 5);
 
-        // Reset form controls
-        reviewForm.reset();
+            // Show success message
+            if (formMessage) {
+              formMessage.textContent = 'Thank you for your review!';
+              formMessage.className = 'form-message success';
+              setTimeout(function() { formMessage.textContent = ''; formMessage.className = 'form-message'; }, 3000);
+            }
 
-        // Reset rating selection to default of 5 stars
-        ratingInput.value = 5;
-        const stars = document.getElementById('starRatingInput')?.querySelectorAll('svg');
-        if (stars) {
-          updateStarsVisualState(stars, 5);
-        }
-
-        // Refresh UI components
-        updateSummaryCard(currentReviews);
-        renderReviewsList(currentReviews);
+            // Re-fetch all reviews from the backend to refresh the list
+            return fetchReviews();
+          })
+          .then(function(reviews) {
+            updateSummaryCard(reviews);
+            renderReviewsList(reviews);
+          })
+          .catch(function(err) {
+            if (formMessage) {
+              formMessage.textContent = err.message || 'Failed to submit review. Please try again.';
+              formMessage.className = 'form-message error';
+              setTimeout(function() { formMessage.textContent = ''; formMessage.className = 'form-message'; }, 5000);
+            }
+          })
+          .finally(function() {
+            if (submitBtn) submitBtn.disabled = false;
+          });
       });
     }
   }
 
   return {
-    initReviewsSystem
+    initReviewsSystem: initReviewsSystem
   };
 })();
