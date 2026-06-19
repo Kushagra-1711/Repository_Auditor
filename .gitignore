@@ -19,3 +19,6 @@ Thumbs.db
 # JSON config
 multi_agent_architecture*.json
 mult_agent_architecture*.json
+
+# Internal docs (not for public repo)
+implementation_enforcement.txt

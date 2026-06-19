@@ -13,6 +13,6 @@ window.AppConfig = (function() {
     // Razorpay public key (safe to expose in frontend)
     // This is populated dynamically from the backend create-order response,
     // but we keep a fallback here for the Checkout.js initialization.
-    RAZORPAY_KEY_ID: '',
+    RAZORPAY_KEY_ID: 'rzp_test_T0Qh0onavj2lQ5',
   };
 })();
