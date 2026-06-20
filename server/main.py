@@ -59,7 +59,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 # CORS — allow the frontend origin(s)
 # ---------------------------------------------------------------------------
 # Build CORS origins: always include the configured FRONTEND_URL,
-# plus common local dev servers.
+# plus common local dev servers and deployment platforms.
 _dev_origins = [
     "http://localhost:5500",
     "http://127.0.0.1:5500",
@@ -72,9 +72,13 @@ allowed_origins = [settings.FRONTEND_URL] + [
     o for o in _dev_origins if o != settings.FRONTEND_URL
 ]
 
+# Also allow any Vercel preview/production deployments
+_vercel_pattern = r"https://.*\.vercel\.app"
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=_vercel_pattern,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
