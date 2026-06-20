@@ -14,17 +14,19 @@ def _build_engine():
 
     Supabase routes connections through PgBouncer in transaction mode,
     which does NOT support prepared statements. We must:
-      1. Set statement_cache_size=0 in asyncpg connect_args
-      2. Set prepared_statement_name_func to None to avoid naming conflicts
+      1. Set statement_cache_size=0 in asyncpg connect_args (client-side cache)
+      2. Set prepared_statement_cache_size=0 as an engine kwarg (SQLAlchemy-level cache)
       3. Use NullPool — PgBouncer already pools connections for us
     """
     return create_async_engine(
         settings.DATABASE_URL,
         echo=False,
         poolclass=NullPool,
+        # Disable SQLAlchemy's own prepared statement cache
+        prepared_statement_cache_size=0,
         connect_args={
+            # Disable asyncpg's client-side prepared statement cache
             "statement_cache_size": 0,
-            "prepared_statement_cache_size": 0,
         },
     )
 
