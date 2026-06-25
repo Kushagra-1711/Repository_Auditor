@@ -276,8 +276,8 @@ User submits repo URL + email + plan
 
 | Plan | Price | Includes |
 |---|---|---|
-| **Starter** | Free | 1 audit/month, email delivery, basic insights |
-| **Growth** | ₹49/mo | Unlimited audits, advanced security checks, team dashboards |
+| **Starter** | Free | 1 audit/day, email delivery, basic insights |
+| **Growth** | ₹49/mo | 10 audits/day, advanced security checks, team dashboards |
 | **Enterprise** | Custom | Dedicated support, compliance reporting, SSO |
 
 ---
