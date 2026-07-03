@@ -9,6 +9,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from starlette.responses import Response
+
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
@@ -52,7 +54,14 @@ app = FastAPI(
 
 # Attach limiter to the app
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+
+def _rate_limit_handler(request: Request, exc: Exception) -> Response:
+    """Typed wrapper so the signature satisfies Starlette's exception-handler protocol."""
+    return _rate_limit_exceeded_handler(request, exc)  # type: ignore[arg-type]
+
+
+app.add_exception_handler(RateLimitExceeded, _rate_limit_handler)
 
 
 # ---------------------------------------------------------------------------

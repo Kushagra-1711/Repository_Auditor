@@ -124,7 +124,7 @@ async def complete_audit(
     if not audit:
         raise HTTPException(status_code=404, detail="Audit not found")
 
-    audit.status = "COMPLETED"
+    audit.status = "COMPLETED"  # type: ignore[assignment]
 
     # Record the completion event
     log_entry = AuditLog(

@@ -2,6 +2,7 @@
 Payment routes — Razorpay order creation and payment verification.
 """
 import razorpay
+import razorpay.errors
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -47,7 +48,7 @@ async def create_order(
 
     client = _get_razorpay_client()
 
-    order_data = client.order.create({
+    order_data = client.order.create({  # type: ignore[attr-defined]
         "amount": amount,
         "currency": "INR",
         "notes": {
@@ -89,7 +90,7 @@ async def verify_payment(
 
     # Verify signature using Razorpay's utility
     try:
-        client.utility.verify_payment_signature({
+        client.utility.verify_payment_signature({  # type: ignore[attr-defined]
             "razorpay_order_id": body.razorpay_order_id,
             "razorpay_payment_id": body.razorpay_payment_id,
             "razorpay_signature": body.razorpay_signature,
@@ -117,8 +118,8 @@ async def verify_payment(
             detail="Payment order not found.",
         )
 
-    payment.razorpay_payment_id = body.razorpay_payment_id
-    payment.status = "PAID"
+    payment.razorpay_payment_id = body.razorpay_payment_id  # type: ignore[assignment]
+    payment.status = "PAID"  # type: ignore[assignment]
 
     await db.commit()
 

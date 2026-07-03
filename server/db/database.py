@@ -18,7 +18,8 @@ def _build_engine():
     which recycles backend connections. asyncpg's default naming scheme
     (__asyncpg_stmt_1__, __asyncpg_stmt_2__, ...) collides when PgBouncer
     hands a recycled connection that already has those names registered.
-
+    """ 
+    """                                                                 
     Fix: UUID-based names guarantee global uniqueness across all sessions.
     """
     return create_async_engine(
