@@ -77,7 +77,7 @@ async def login(request: Request, body: LoginRequest, db: AsyncSession = Depends
     )
     user = result.scalar_one_or_none()
 
-    if not user or not verify_password(body.password, user.password_hash):
+    if not user or not verify_password(body.password, str(user.password_hash)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password.",
@@ -126,7 +126,7 @@ async def forgot_password(request: Request, body: ForgotPasswordRequest, db: Asy
 
     # Send the email (fire-and-forget; failures are logged, not raised)
     try:
-        send_password_reset_email(user.email, raw_token)
+        send_password_reset_email(str(user.email), raw_token)
     except Exception:
         pass  # Don't leak email-send failures to the client
 
@@ -164,8 +164,8 @@ async def reset_password(body: ResetPasswordRequest, db: AsyncSession = Depends(
             detail="User not found.",
         )
 
-    user.password_hash = hash_password(body.new_password)
-    token_entry.used = True
+    user.password_hash = hash_password(body.new_password)  # type: ignore[assignment]
+    token_entry.used = True  # type: ignore[assignment]
 
     await db.commit()
     return MessageResponse(message="Password has been reset successfully.")
