@@ -5,8 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sess
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.pool import NullPool
 
-from config import settings
-
+import os
 import uuid
 
 
@@ -22,8 +21,12 @@ def _build_engine():
     """                                                                 
     Fix: UUID-based names guarantee global uniqueness across all sessions.
     """
+    db_url = os.getenv("DATABASE_URL")
+    if not db_url:
+        raise RuntimeError("DATABASE_URL environment variable is not set.")
+
     return create_async_engine(
-        settings.DATABASE_URL,
+        db_url,
         echo=False,
         poolclass=NullPool,
         connect_args={
