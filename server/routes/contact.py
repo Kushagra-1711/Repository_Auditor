@@ -1,12 +1,11 @@
 """
 Contact routes — receive "Leave us your query" submissions via email.
 """
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel, EmailStr, Field
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
-from config import settings
 from utils.email import send_contact_email
 
 router = APIRouter(prefix="/api/contact", tags=["Contact"])

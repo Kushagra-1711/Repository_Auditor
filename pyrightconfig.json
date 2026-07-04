@@ -1,0 +1,8 @@
+{
+  "include": ["server"],
+  "extraPaths": ["server"],
+  "venvPath": "server",
+  "venv": "venv",
+  "pythonVersion": "3.11",
+  "typeCheckingMode": "basic"
+}
