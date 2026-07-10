@@ -19,26 +19,32 @@ window.AppAPI = (function() {
 
   /**
    * Submits a repository audit request to the n8n webhook.
-   * (Direct webhook flow — will migrate to FastAPI in v1.1)
+   * n8n responds via "Respond to Webhook" with the full report JSON.
    * @param {string} repoUrl - The URL of the GitHub repository.
-   * @param {string} email - The email address to send the report to.
    * @param {string} plan - The selected pricing plan.
-   * @returns {Promise<Response>} Resolves with the fetch response if successful.
+   * @returns {Promise<Object>} Resolves with the parsed report data.
    */
-  async function submitAuditRequest(repoUrl, email, plan) {
+  async function submitAuditRequest(repoUrl, plan) {
     var url = window.AppConfig.WEBHOOK_URL;
     var response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ repoUrl: repoUrl, email: email, plan: plan, source: 'website' }),
+      body: JSON.stringify({ repoUrl: repoUrl, plan: plan, source: 'website' }),
     });
 
     if (!response.ok) {
       var errorText = await response.text();
-      throw new Error(errorText || 'Request failed.');
+      throw new Error(errorText || 'Audit request failed.');
     }
 
-    return response;
+    var data;
+    try {
+      data = await response.json();
+    } catch (e) {
+      throw new Error('Invalid response from audit service.');
+    }
+
+    return data;
   }
 
   /**

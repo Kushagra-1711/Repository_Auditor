@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Your AI-powered repository audit report with risk scores, security findings, and actionable recommendations." />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <title>Audit Report — RepoAuditor</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="report-page">
+
+    <!-- ===== Top Bar ===== -->
+    <header class="topbar">
+      <a href="index.html" class="brand">RepoAuditor</a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#features">Features</a>
+        <a href="index.html#pricing">Pricing</a>
+      </nav>
+      <div id="topbarAuth" class="topbar-auth">
+        <a href="signup.html" class="button button-primary">Sign Up</a>
+        <a href="login.html" class="button button-secondary">Log In</a>
+      </div>
+    </header>
+
+    <main class="report-main">
+
+      <!-- ===== Loading Overlay (shown while waiting) ===== -->
+      <div id="reportLoading" class="report-loading" style="display:none;">
+        <div class="loading-content">
+          <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+          </div>
+          <h2>Analyzing Repository…</h2>
+          <p class="loading-subtitle">Our multi-agent AI pipeline is scanning your codebase</p>
+          <div class="loading-steps">
+            <div class="loading-step active" id="step1">
+              <span class="step-icon">🔍</span>
+              <span>Crawling repository structure</span>
+            </div>
+            <div class="loading-step" id="step2">
+              <span class="step-icon">🏗️</span>
+              <span>Analyzing architecture</span>
+            </div>
+            <div class="loading-step" id="step3">
+              <span class="step-icon">🔒</span>
+              <span>Running security audit</span>
+            </div>
+            <div class="loading-step" id="step4">
+              <span class="step-icon">⚡</span>
+              <span>Evaluating performance</span>
+            </div>
+            <div class="loading-step" id="step5">
+              <span class="step-icon">📦</span>
+              <span>Checking dependencies</span>
+            </div>
+            <div class="loading-step" id="step6">
+              <span class="step-icon">📋</span>
+              <span>Generating final report</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Error State ===== -->
+      <div id="reportError" class="report-error" style="display:none;">
+        <div class="error-content">
+          <div class="error-icon">⚠️</div>
+          <h2>Something went wrong</h2>
+          <p id="reportErrorMessage">We couldn't generate the report. Please try again.</p>
+          <a href="index.html" class="button button-primary">Try Again</a>
+        </div>
+      </div>
+
+      <!-- ===== Report Dashboard ===== -->
+      <div id="reportDashboard" class="report-dashboard" style="display:none;">
+
+        <!-- Report Header -->
+        <div class="report-header">
+          <div class="report-header-info">
+            <p class="eyebrow">Repository Audit Report</p>
+            <h1 id="reportRepoName">—</h1>
+            <p class="report-meta-line">
+              <span id="reportTimestamp"></span>
+            </p>
+          </div>
+          <div class="report-header-actions">
+            <a href="index.html" class="button button-outline">← New Audit</a>
+          </div>
+        </div>
+
+        <!-- Risk Score Gauge -->
+        <section class="report-score-section">
+          <div class="score-gauge-card">
+            <div class="gauge-container">
+              <svg class="gauge-svg" viewBox="0 0 200 200">
+                <circle class="gauge-bg" cx="100" cy="100" r="85" />
+                <circle class="gauge-fill" id="gaugeFill" cx="100" cy="100" r="85" />
+              </svg>
+              <div class="gauge-value">
+                <span class="gauge-number" id="gaugeNumber">0</span>
+                <span class="gauge-label">Risk Score</span>
+              </div>
+            </div>
+            <div class="gauge-severity" id="gaugeSeverity">
+              <span class="severity-badge" id="severityBadge">—</span>
+            </div>
+          </div>
+
+          <div class="score-summary-card">
+            <h3>Final Recommendation</h3>
+            <p id="finalRecommendation" class="recommendation-text">—</p>
+          </div>
+        </section>
+
+        <!-- Action Cards -->
+        <section class="report-actions-section">
+
+          <!-- Critical Actions -->
+          <div class="action-category">
+            <div class="action-category-header critical">
+              <span class="action-category-icon">🚨</span>
+              <div>
+                <h2>Critical Actions</h2>
+                <p>High-priority issues that need immediate attention</p>
+              </div>
+              <span class="action-count" id="criticalCount">0</span>
+            </div>
+            <div class="action-list" id="criticalActionsList">
+              <p class="no-actions">No critical actions found — great work!</p>
+            </div>
+          </div>
+
+          <!-- Short-Term Actions -->
+          <div class="action-category">
+            <div class="action-category-header warning">
+              <span class="action-category-icon">⚡</span>
+              <div>
+                <h2>Short-Term Actions</h2>
+                <p>Improvements to prioritize in the next sprint cycle</p>
+              </div>
+              <span class="action-count" id="shortTermCount">0</span>
+            </div>
+            <div class="action-list" id="shortTermActionsList">
+              <p class="no-actions">No short-term actions identified.</p>
+            </div>
+          </div>
+
+          <!-- Long-Term Actions -->
+          <div class="action-category">
+            <div class="action-category-header info">
+              <span class="action-category-icon">🗺️</span>
+              <div>
+                <h2>Long-Term Actions</h2>
+                <p>Strategic improvements for your engineering roadmap</p>
+              </div>
+              <span class="action-count" id="longTermCount">0</span>
+            </div>
+            <div class="action-list" id="longTermActionsList">
+              <p class="no-actions">No long-term actions identified.</p>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Footer Actions -->
+        <div class="report-footer-actions">
+          <a href="index.html" class="button button-primary">Run Another Audit</a>
+          <button class="button button-outline" id="printReportBtn">🖨️ Print Report</button>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- ===== Footer ===== -->
+    <footer class="site-footer">
+      <div class="footer-bottom">
+        <p>© 2026 RepoAuditor. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- ===== Scripts ===== -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/report.js"></script>
+
+  </body>
+</html>

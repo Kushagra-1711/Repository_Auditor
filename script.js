@@ -16,26 +16,31 @@
       event.preventDefault();
 
       var repoUrl = form.querySelector('input[type="url"]').value.trim();
-      var email = form.querySelector('input[type="email"]').value.trim();
       var plan = form.querySelector('select') ? form.querySelector('select').value : 'starter';
       var resultElement = form.querySelector('.form-message');
 
-      if (!repoUrl || !email) {
-        window.AppUI.showMessage(resultElement, 'Please enter a valid repository URL and email address.', 'error');
+      if (!repoUrl) {
+        window.AppUI.showMessage(resultElement, 'Please enter a valid repository URL.', 'error');
         return;
       }
 
       // Show loading state and disable submit button
-      window.AppUI.showMessage(resultElement, 'Starting audit…', 'loading');
+      window.AppUI.showMessage(resultElement, 'Starting audit… This may take a few minutes.', 'loading');
       window.AppUI.setSubmitButtonState(form, true);
 
       try {
-        await window.AppAPI.submitAuditRequest(repoUrl, email, plan);
-        window.AppUI.showMessage(
-          resultElement,
-          'Audit started successfully. A full report is on its way to your inbox.',
-          'success'
-        );
+        var reportData = await window.AppAPI.submitAuditRequest(repoUrl, plan);
+
+        // Store report data and meta in sessionStorage
+        sessionStorage.setItem('repoauditor_report', JSON.stringify(reportData));
+        sessionStorage.setItem('repoauditor_report_meta', JSON.stringify({
+          repoUrl: repoUrl,
+          plan: plan,
+          timestamp: new Date().toISOString(),
+        }));
+
+        // Redirect to the report dashboard
+        window.location.href = 'report.html';
       } catch (error) {
         window.AppUI.showMessage(
           resultElement,
