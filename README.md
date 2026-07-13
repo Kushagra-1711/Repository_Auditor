@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <a href="https://repo-auditor-frontend.vercel.app">Live Site</a> ·
+  <a href="https://repository-auditor.vercel.app/">Live Site</a> ·
   <a href="#features">Features</a> ·
   <a href="#multi-agent-architecture">Architecture</a> ·
   <a href="#getting-started">Getting Started</a>
