@@ -37,14 +37,21 @@ window.AppAPI = (function() {
       throw new Error(errorText || 'Audit request failed.');
     }
 
-    var data;
-    try {
-      data = await response.json();
-    } catch (e) {
-      throw new Error('Invalid response from audit service.');
+    // n8n may respond with JSON or plain text/HTML — handle both
+    var contentType = response.headers.get('content-type') || '';
+    var rawText = await response.text();
+
+    if (contentType.indexOf('application/json') !== -1) {
+      try {
+        return JSON.parse(rawText);
+      } catch (e) {
+        // JSON header but invalid body — treat as text
+        return { report: rawText };
+      }
     }
 
-    return data;
+    // Plain text or HTML response — wrap it for the report parser
+    return { report: rawText };
   }
 
   /**
