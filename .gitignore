@@ -22,3 +22,5 @@ mult_agent_architecture*.json
 
 # Internal docs (not for public repo)
 implementation_enforcement.txt
+
+js/config.js

@@ -81,13 +81,13 @@ allowed_origins = [settings.FRONTEND_URL] + [
     o for o in _dev_origins if o != settings.FRONTEND_URL
 ]
 
-# Also allow any Vercel preview/production deployments
-_vercel_pattern = r"https://.*\.vercel\.app"
+# Also allow any Vercel preview/production and Railway deployments
+_deploy_pattern = r"https://.*\.(vercel\.app|up\.railway\.app)"
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
-    allow_origin_regex=_vercel_pattern,
+    allow_origin_regex=_deploy_pattern,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

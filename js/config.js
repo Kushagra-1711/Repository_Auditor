@@ -5,7 +5,7 @@ window.AppConfig = (function () {
 
   return {
     // n8n webhook for audit submission (uses Respond to Webhook to return report JSON)
-    WEBHOOK_URL: 'https://n8n.jollyhill-570c4ac8.australiaeast.azurecontainerapps.io/webhook/0bb3e865-950f-4091-a44d-9e716b564108',
+    WEBHOOK_URL: 'https://n8n-production-b659.up.railway.app/workflow/W8KhV9eOPSOuYg42',
 
     // FastAPI backend base URL (no trailing slash)
     API_BASE_URL: 'https://repository-auditor.onrender.com',

@@ -1,0 +1,10 @@
+[build]
+# Use Dockerfile from the server/ directory
+dockerfilePath = "Dockerfile"
+
+[deploy]
+# Railway will set PORT automatically, healthcheck hits the root endpoint
+healthcheckPath = "/"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
